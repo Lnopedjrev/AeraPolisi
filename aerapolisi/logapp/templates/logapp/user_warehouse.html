@@ -1,0 +1,67 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block main-content %}
+    <div class="container">
+        <section class="products-lists">
+            <div class="products-lists__own">
+                
+                {% if ln_req_l != 0 %}
+                    <a class="notification-bell" href="{% url 'requests-check' %}"><i class="fa-regular fa-bell fa-lg"></i>
+                    <span class="notification-bell__counter">{{ ln_req_l }}</span></a>
+                {% endif %}
+
+                <h2>Products you own</h2>
+                    <ul class="products-lists__list">
+                        {% for offer in object_list %}
+                            {% if offer.availability > 0  and not offer.get_active %}
+                                <li class="products-lists__element">
+                                    <div class="products-lists__product-image"><img src="{{offer.product.get_first_image}}" alt="Image NOT FOUND"></div>
+                                    <div class="products-lists__product-info">
+                                        <ul class="products-lists__box">
+                                            <li>{{offer.product}}</li>
+                                            <li>Quantity in possesion: {{offer.availability}}</li>
+                                        </ul>
+                                    </div>  
+                                    {% if offer.product.seller == user %}
+                                    <a class="maintain_url product-edit__url" href="{{offer.product.get_absolute_url}}edit"><i class="fa-solid fa-wrench"></i></a>
+                                    {% endif %}
+
+                                    {% if offer.owner == user.customer %}
+                                    <a class="maintain_url" href="{{offer.get_edit_url}}"><i class="fa-solid fa-gavel"></i></a>
+                                        {% if offer.owner.user != offer.product.seller %}
+                                            <a class="product__checkout" href="{{offer.get_checkout_url}}">Check it out</a>
+                                        {% endif %}
+                                    {% endif %}
+                                </li>
+                                {% endif %}
+                        {%endfor%}
+                    </ul>
+            </div>
+            <div class="products-lists__purchased">
+                <h2>Products you offered</h2>
+                <div class="products-lists__list">
+                    <ul>
+                        {% for offer in object_list %}
+                            {% if offer.get_active and offer.owner == user.customer %}
+                                <li class="products-lists__element">
+                                        <div class="products-lists__product-image"><img src="{{offer.product.get_first_image}}" alt="Image NOT FOUND"></div>
+                                        <div class="products-lists__product-info">
+                                            <ul class="products-lists__box">
+                                                <li>{{offer.product}}</li>
+                                                <li>Quantity in possesion: <span class="product-spaninfo">{{offer.availability}}</span></li>
+                                                <li>Creator: <span class="product-spaninfo" >{{offer.product.seller}}</span></li>
+                                                <li>Price: <span class="product-spaninfo" > <img class="coin-image" src="/media/images/coinsymbol.png" alt=""> {{offer.product.price}}</span> </li>
+                                            </ul>
+                                        </div>
+                                        <a class="maintain_url" href="{{offer.get_edit_url}}"><i class="fa-solid fa-gavel"></i></a>
+                                </li>   
+                            {% endif %}
+                        {%endfor%}
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+{%endblock%}

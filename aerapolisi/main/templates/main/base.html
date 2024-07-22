@@ -1,0 +1,192 @@
+{% load sass_tags %}
+{% load static%}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}}</title>
+    {% block scripts-content %}{% endblock %}
+    <link href="{% sass_src 'main/css/main.scss' %}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Aclonica&family=Bebas+Neue&family=Dhurjati&family=News+Cycle&family=Oswald&family=Pacifico&family=Roboto+Condensed:wght@200&family=Skranji&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/c88d6189ee.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        var user = "{{request.user}}"
+
+        function getToken(name) {
+            var cookieValue = null
+            if (document.cookie && document.cookie !== ''){
+                var cookies = document.cookie.split(';')
+                for (var i = 0; i < cookies.length; i++){
+                    var cookie = cookies[i].trim();
+
+                    if (cookie.substring(0, name.length +1) === (name + '=')){
+                        cookieValue = decodeURIComponent(cookie.substring(name.length +1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    var csrftoken = getToken('csrftoken');
+    </script>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="wrapper-content">
+            <header class="header">
+                <div class="header__container">
+                    <div class="header__top">
+                        <a class="logo" href="{% url 'main' %}">
+                            <img src="/media/images/main_page/light_logo.svg" alt="">
+                            <div class="site-name">AeraPolisi</div>
+                        </a>
+    
+                        <nav class="menu">
+                            <ul class="menu__list">
+                                <li class="menu__item">
+                                    <a class="menu__link" href="{% url 'shop' %}">
+                                        <div class="menu__box">Shop<br>
+                                                               <i class="fa-sharp fa-solid fa-shop"></i>
+                                        </div>
+                                    </a>
+                                </li>
+                                {% if request.user.is_authenticated %}
+                                    <li class="menu__item">
+                                        <div class="menu__box"><a class="menu__user-link" href="{{user.get_absolute_url}}">{{user.username}}</a>|<a href="{% url 'logout' %}">Log Out</a><i class="fa-regular fa-user"></i> {{user.balance}} <img class="coin-image" src="/media/images/coinsymbol.png" alt=""></div>
+                                    </li>
+                                {% else %}
+                                    <li class="menu__item">
+                                        <div class="menu__box"><a href="{% url 'logpage' %}">Log In</a>|<a href="{% url 'regpage' %}">Sign Up</a><i class="fa-regular fa-user"></i></div>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </nav>  
+                    </div>
+                    {% block header-content %}{% endblock %}
+                </div>
+                <div class="notification">
+                    <div class="notification__left"><div class="product-image" id="product_image" ></div></div>
+                    <div class="notification__right">
+                        <h3>Your product is sold!</h3>
+                        <ul class="products-lists__box">
+                            <li id="product_name"></li>
+                            <li>Quantity: <span class="product-spaninfo" style="margin-left: 10px;" id="quantity">4</span></li>
+                            <li>Buyer: <span class="product-spaninfo" id="buyer"></span></li>
+                            <li>Price: <span class="product-spaninfo" id="price">$</span> </li>
+                        </ul>
+                    </div>
+                </div>
+            </header>
+    
+            <main class="main">
+                {% block main-content %}{% endblock %}
+                <script src="{% static 'main/js/app.js'%}"></script>
+            {% if page_obj.has_other_pages and not paginate_except %}
+                <nav class="pagination">
+                    <span class="pagination__links-container">
+                        {% if page_obj.has_previous %}
+                            <a class="pagination__link" href="?page=1">&laquo; first</a>
+                            <a class="pagination__link" href="?page={{ page_obj.previous_page_number }}"><</a>
+                        {% endif %}
+                        {% for p in paginator.page_range %}
+                            {% if page_obj.number == p %}
+                                <span class="pagination__link-page current-page">
+                                    {{ page_obj.number }}
+                                </span>
+                                {% elif p >= page_obj.number|add:-1 and p <= page_obj.number|add:1 %}
+                                <span class="pagination__link-page"><a href="?page={{ p }}"> {{ p }} </a></span>
+                            {% endif %}
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                            <a class="pagination__link" href="?page={{ page_obj.next_page_number }}">></a>
+                            <a class="pagination__link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                        {% endif %}
+                    </span>
+                </nav>
+            {% endif %}
+            </main>
+    
+            <footer class="footer">
+                <div class="container">
+                    <div class="footer__top">
+                        <a class="logo" href="{% url 'main' %}" style="background: none;">
+                            <img src="/media/images/main_page/light_logo.svg" alt="">
+                        </a>
+                        <div class="footer__lists">
+                            <div class="footer__item">
+                                <h2>About us</h2>
+                                <ul class="footer__list">
+                                    <li class="footer__element"><a class="footer__link" href="{% url 'main' %}">Visit main page</a></li>
+                                    <li class="footer__element"><a class="footer__link" href="https://www.instagram.com/">Instagram</a></li>
+                                    <li class="footer__element"><a class="footer__link" href="https://x.com/">X</a></li>
+                                </ul>
+                            </div>
+                            <div class="footer__item">
+                                <h2>Contacts</h2>
+                                <ul class="footer__list">
+                                    <li class="footer__element"><a class="footer__link" href="#">Send email</a></li>
+                                    <li class="footer__element"><a class="footer__link" href="#"></a>Telegram</li>
+                                    <li class="footer__element"><a class="footer__link" href="#"></a>Reddit</li>
+                                </ul>
+                            </div>
+                            <div class="footer__item">
+                                <h2>Projects</h2>
+                                <ul class="footer__list">
+                                    <li class="footer__element"><a class="footer__link" href="#">GitHub</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer_bottom">
+    
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    {% if user.is_authenticated %}
+        <script type="text/javascript">
+            const notificationSocket = new WebSocket(`ws://${window.location.host}/ws/socket-server/{{user.username}}/`)
+            
+            const notification_slide = [
+                { transform: 'translateX(0%)', offset: 0.7, display :'flex'},
+                { transform: 'translateX(200%)'}
+            ]
+
+            const notification_timing = {
+                duration: 7000,
+                iteration: 1  
+            }
+
+            notificationSocket.onmessage = function(e){
+                let data = JSON.parse(e.data)
+                console.log('Data:',data)
+
+                if (data.type === 'notification'){
+                    let buyer = document.getElementById('buyer')
+                    buyer.insertAdjacentHTML('beforeEnd',`<p>${data.buyer}</p>`)
+                    
+                    let name = document.getElementById('product_name')
+                    name.insertAdjacentHTML('beforeEnd',`<p>${data.name}</p>`)
+
+                    let price = document.getElementById('price')
+                    price.insertAdjacentHTML('beforeEnd',`<p>${data.price}</p>`)
+
+                    let quantity = document.getElementById('quantity')
+                    quantity.insertAdjacentHTML('beforeEnd',`<p>${data.quantity}</p>`)
+
+                    let image = document.getElementById('product_image')
+                    image.insertAdjacentHTML('beforeEnd',`<img src="${data.image}" alt="Image NOT FOUND" id="product_image">`)
+
+
+                    let message_box = document.querySelector('.notification')
+                    message_box.animate(notification_slide, notification_timing)
+    
+                    
+                }
+            }
+        </script>
+    {% endif %}
+    {% block additional-script %}{% endblock %}
+</body>
+</html>

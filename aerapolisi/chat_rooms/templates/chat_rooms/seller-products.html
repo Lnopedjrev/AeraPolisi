@@ -1,0 +1,46 @@
+
+{% for product in products%}
+    <button class="seller-ownership__product-button" value="{{product.id}}" id="product-send">
+        <li class="seller-ownership__element grid-element">
+                <div class="seller-ownership__element-box product">
+                    <div class="product-image"><img src="{{product.get_first_image}}" alt="Image NOT FOUND"></div>
+                    <a class="product__link" href="{{product.get_absolute_url}}"><div class="product-personal">>>></div></a>
+                    <div class="product__price">${{product.price|floatformat:2}}</div>
+                    <div class="product__info">
+                        <a class="product__name" href="{{product.get_absolute_url}}">{{product.name}}</a>
+                    </div>
+                </div>
+        </li>  
+    </button> 
+{% endfor %}
+{% include 'chat_rooms/seller-products__load-more.html' with page=products %}
+
+<script>
+    product_b = document.getElementsByClassName("seller-ownership__product-button")
+    for (let i = 0;i <product_b.length;i++){
+        product_b[i].addEventListener('click', (e) =>{
+            let product = product_b[i].querySelector(".seller-ownership__element-box")
+            let product_url = product.querySelector('.product__name').href
+            console.log('something')
+            let price = product.querySelector(".product__price").innerHTML
+            let image_url = product.querySelector(".product-image").querySelector('img').src
+            let product_name = product.querySelector(".product__name").innerHTML
+            product_input.innerHTML='';
+            product_input.insertAdjacentHTML('beforeEnd',
+                `
+                <button class="clear-button" id="clear-button"><i class="fa-solid fa-square-xmark"></i></button>
+                <div class="product-image"><img src="${image_url}" alt="Image NOT FOUND"></div>
+                <div class="product__price">${price}</div>
+                <div class="product__info">
+                    <a class="product__name" href="${product_url}">${product_b[i].value} - ${product_name}</a>
+                </div>`)
+            
+            let product_clear = document.getElementById('clear-button')
+            console.log(product_clear)
+            product_clear.addEventListener('click', (e) =>{
+                product_input.innerHTML='...';
+            })
+        })
+    }
+    
+</script>

@@ -1,0 +1,101 @@
+
+
+$color_p: #d44f43; //primary color
+$color_s: #164c5d; //secondary color
+$color_b: #a08eb9; //for text and background contrast.
+$desc_font:'Bebas Neue', sans-serif;
+$main_font:'Skranji', cursive;
+$extra_font:'News Cycle', sans-serif;
+
+:root {
+    --index: calc(1vw + 1vh) ;
+    
+}
+
+
+
+
+.check-container{
+    padding-bottom: 10vh;
+    padding-top: 5vh;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    &__list{
+        width: 90%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5vh;
+        color: rgba(85, 68, 68, 0.753);
+    }
+    &__element{
+        display: flex;
+        flex-direction: row;
+        align-items:end;
+        font-size: calc(var(--index) *1);
+        font-family: $main_font;
+        height:30vh;
+        width: 100%;
+
+    }
+
+    &__buttons{
+        height: 15vh;
+        width: 15vw;
+    }
+
+}
+
+.check-product{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: row;
+    gap: 5vw;
+    padding: 0.5vw;
+
+    &__left{
+        width: 15%; 
+        position: relative;
+        height: 100%;
+    }
+    &__seller{
+        width:initial;
+        position: relative;
+        display: flex;
+    }
+    &__right{
+        width: 65%;
+        h2{
+            text-align: center;
+            color: black;
+        }
+    }
+
+    &__features{
+        display: flex;
+        flex-direction: column;
+        gap: 0.8vh;
+        width: 45%;
+    }
+
+    &__description{
+        width: 45%;
+        max-height: 25vh;
+        padding: 2px;
+        border-bottom: 1px solid;
+        border-radius: 2px;
+        overflow: hidden;
+        font-size: calc(var(--index) *0.8);
+    }
+}
+
+.check-product__content{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+}

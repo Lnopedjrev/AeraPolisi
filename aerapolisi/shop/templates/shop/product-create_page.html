@@ -1,0 +1,22 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block main-content%}
+    <div class="container">
+        <div class="create-box">
+            <div class="create-box__content create-product__container">
+                <h2>Offer your product</h2>
+                <form action="" class="create-box__form" method="post" enctype="multipart/form-data">
+                    {%csrf_token%}
+                        <div class="create-box__elements">
+                            {%for field in form%}
+                                <div><label class="form-field" for="{{ field.id_for_label }}">{{ field.label }}:</label><br>{{field}}
+                                <div class="reg-errors">{{field.errors}}</div></div>
+                            {%endfor%}
+                        </div>
+                    <button type="submit" class="submit-button" id="submit-button"> Sumbit! </button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'main/base.html' %}
+{% load static%}
+
+
+{% block main-content %} 
+<div class="container">
+    <div class="checkout__container">
+        <h1>You're going to check out:</h1>
+        <div class="checkout__product-info">
+            <ul class="checkout__information checkout__information--left">
+                <li class="checkout__product-name"><a href="{{offer.product.get_absolute_url}}"><h3>{{offer.product.name}}</h3></a></li>
+                <li class="checkout__product-image"><div class="product-image"><img src="{{offer.product.get_first_image}}" alt="Image NOT FOUND"></div></li>
+                <li class="checkout__product-seller">Seller: <a href="{{offer.product.seller.get_absolute_url}}"><span class="marked-text">{{offer.product.seller}}</span></a></li>
+                <li class="checkout__offer-price">Average price: {{offer.price}}</li>
+                <li class="checkout__offer-availability">You currently own: {{offer.availability}}</li>
+            </ul>
+            
+            <ul class="checkout__information checkout__information--right" style="{% if ship %} dispaly:flex; {% else %} display:none; {% endif %}">
+                <li class="checkout__shipping-adress"> Your adress: <span id="new_ship-value">{{ship.address}}</span></li>
+                <li class="checkout__shipping-city"> Your city: <span id="new_ship-value">{{ship.city}}</span> </li>
+                <li class="checkout__shipping-state"> Your state: <span id="new_ship-value">{{ship.state}}</span> </li>
+                <li class="checkout__shipping-zipcode"> Zipcode <span id="new_ship-value">{{ship.zipcode}}</span> </li>
+                <div class="data-change">The data is irrelevant? -> 
+                    <button class="change-textbutton" id="change_call">Change it</button> 
+                    <div class="data-change__container">
+                    <button class="clear-button" id="clear-button"><i class="fa-solid fa-square-xmark"></i></button>
+                    <form class="data-change__form" id="change_ship-form">
+                        {%for field in form%}
+                            {% if field.id_for_label != "id_number"%}
+                            <div class="data-change__field"><label class="form-field" for="{{ field.id_for_label }}">{{ field.label }}:</label><br>{{field}}
+                            <div class="reg-errors">{{field.errors}}</div></div>
+                            {% endif %}
+                        {%endfor%}
+                    </form>
+                    <button class="change-textbutton" id="change_submit"> Commit changes </button> 
+                    </div>
+                </div>
+            </ul>
+
+            
+        </div>  
+        <button class="submit-button" id="confirm-button"> Confirm </button>
+        <div class="checkout__last-chance">
+            <button class="clear-button" id="clear-button"><i class="fa-solid fa-square-xmark"></i></button>
+            <div class="checkout__warning-message"></div>
+
+            <form class="checkout__final-form" id="final-form" action="" method="POST">
+                {%csrf_token%}
+
+                {%for field in form%}
+                    {% if offer.product.service == False or field.id_for_label == "id_number" %}
+                        <div class="data-change__field"><label class="form-field" for="{{ field.id_for_label }}">{{ field.label }}:</label><br>{{field}}
+                        <div class="reg-errors">{{field.errors}}</div></div>
+                    {% endif %}
+                {%endfor%}
+                <button class="submit-button sumbit-button--finishing" id="final-button" type="submit"> Finish It </button>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="{% static 'shop/js/product_checkout.js'%}"></script>
+{% endblock %}
+
+{% block additional-script %}
+
+
+{% endblock %}

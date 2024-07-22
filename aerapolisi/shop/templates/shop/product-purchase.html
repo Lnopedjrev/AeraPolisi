@@ -1,0 +1,64 @@
+{% extends 'main/base.html' %}
+{% block main-content %}
+    <div class="container">
+        <form class="payment-form" id="payment-form" method="post" action="">
+            {%csrf_token%}
+            <div class="payment__container">
+                <div class="payment__left">
+                    <h1> Fill the form please! </h1>
+                    <div class="paymnet__customer-info">    
+                        <div><label class="payment__field" for="{{ form.discord.id_for_label }}">{{ form.discord.label }}:</label><br>{{form.discord}}
+                        <div class="reg-errors">{{form.discord.errors}}</div></div>
+                        <div><label class="payment__field" for="{{ form.email.id_for_label }}">{{ form.email.label }}:</label><br>{{form.email}}
+                        <div class="reg-errors">{{form.email.errors}}</div></div>
+                    </div>
+                    {% if product.service == False %}
+                    <h2>Shipping info:</h2>
+                    <div class="payment__shipping-info">
+                        <div><label class="payment__field" for="{{ form.address.id_for_label }}">{{ form.address.label }}:</label><br>{{form.address}}
+                        <div class="reg-errors">{{form.address.errors}}</div></div>
+                        <div><label class="payment__field" for="{{ form.city.id_for_label }}">{{ form.city.label }}:</label><br>{{form.city}}
+                        <div class="reg-errors">{{form.city.errors}}</div></div>
+                        <div><label class="payment__field" for="{{ form.state.id_for_label }}">{{ form.state.label }}:</label><br>{{form.state}}
+                        <div class="reg-errors">{{form.state.errors}}</div></div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div  class="payment__right">
+                    <a class="back-button" href="{{product.get_absolute_url}}"><-Back to the product</a>
+                    <h2>You're going to purchase:</h2>
+                    <div class="payment__element">
+                        <div class="payment__image">
+                            <img src="{{image.image.url}}" alt="Image NOT FOUND">
+                        </div>
+                        <div class="payment__box">
+                            <label class="payment__counter" for="{{ form.number.id_for_label }}">{{ form.number.label }}:</label>
+                            {{form.number}}
+                            <div class="reg-errors">{{form.number.errors}}</div>
+                        </div>
+                        <p>Total: ${{offer.price}}</p>
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="submit-button" id="submit-button"> Sumbit! </button>
+            <div>{{ form.non_field_errors }}</div>
+        </form>
+    </div>
+{%endblock%}
+
+{% block additional-script %}
+<script type="text/javascript">
+    let form = document.getElementById('payment-form')
+        form.addEventListener('submit', (e) => {
+            offer = '{{offer.id}}'
+            buyer = '{{user.username}}'
+            console.log(offer)
+            if ( offer ){
+                notificationSocket.send(JSON.stringify({
+                    'offer':offer,
+                    'buyer':buyer,
+                }))
+            }
+        })
+</script>
+{%endblock%}

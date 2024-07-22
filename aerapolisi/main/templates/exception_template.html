@@ -1,0 +1,12 @@
+{% extends 'main/base.html' %}
+
+{% block main-content %}
+<div class="container">
+    <div class="access-handling">
+        <div class="access-handling__container">
+            <p class="access-handling__text">{% block error-message %} {% endblock %}</p>
+        </div>
+    </div>
+</div>
+<script src="{% static 'main/js/nothing.js'%}"></script>
+{%endblock%}

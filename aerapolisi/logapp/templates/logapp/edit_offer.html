@@ -1,0 +1,22 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block main-content %}
+
+<div class="container">
+    <div class="edit-container">
+        <div class="edit-container__content">
+            <form class="edit-container__box" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div><label class="form-field" for="{{ form.price.id_for_label }}">{{ form.price.label }}:</label><br>{{form.price}}</div>
+                <div class="reg-errors">{{form.price.errors}}</div>
+                <div><label class="form-field" for="{{ form.is_active.id_for_label }}">{{ form.is_active.label }}:</label><br>{{form.is_active}}</div>
+                <div class="reg-errors">{{form.is_active.errors}}</div>
+                <button type="submit" class="submit-button">Save Changes</button>
+            </form>
+            <div class="reg-box__form-error">{{ form.non_field_errors }}</div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

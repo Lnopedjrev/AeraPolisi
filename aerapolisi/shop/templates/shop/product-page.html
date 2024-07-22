@@ -1,0 +1,79 @@
+{% extends 'main/base.html' %}
+{% load static%}
+{% block main-content %}
+<div class="container">
+    <section class="product-container">
+        <div class="product-view">
+            <div class="product-view__left">
+                <div class="product-view__images-box">
+                    <ul>
+                        {% for image in images %}
+                            <li class="product-view__element">
+                                <button class="product-view__image-button" id="product-image-{{image.id}}">
+                                    <div class="product-view__image"><img src="{{image.image.url}}" alt=""></div>
+                                </button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="product-view__image product-view__image--main">
+                    <img src="{{first_image.image.url}}" alt="">
+                </div>
+            </div>
+            <script src="{% static 'shop/js/product_page.js'%}"></script>
+            <div class="product-view__right">
+                <div class="product-view__name"><h3>{{product.name}}</h3>
+                    <div>
+                    {% if user.is_authenticated == False %}
+
+                    {% elif seller == user %}
+                    
+                    {% elif product in  fav_list %}
+                        <button class="favourite-button" id="favourite-add"  style="display: none;" data-product="{{product.id}}" data-action="add"><i class="fa-regular fa-heart" style="color: #931a44;"></i></button>
+                        <button class="favourite-button" id="favourite-remove" data-product="{{product.id}}" data-action="remove"><i class="fa-solid fa-heart" style="color: #931a44;"></i></button>
+                    {% else %}
+                        <button class="favourite-button" id="favourite-add" data-product="{{product.id}}" data-action="add"><i class="fa-regular fa-heart" style="color: #931a44;"></i></button>
+                        <button class="favourite-button" id="favourite-remove" style="display: none;" data-product="{{product.id}}" data-action="remove"><i class="fa-solid fa-heart" style="color: #931a44;"></i></button>
+                    {% endif %}
+                    </div>
+                </div>
+                
+                <ul>
+                    <li class="product-view__element">
+                        Creator: <span class="marked-text"><a href="{{seller.get_absolute_url}}">{{seller.username}}</a></span>
+                    </li>
+                    <li class="product-view__element">Digital:
+                        {% if product.service %}
+                            <i class="fa-solid fa-square-check" style="color: #4e7955;"></i>
+                        {% else %}
+                            <i class="fa-solid fa-xmark" style="color: #6f1111;"></i>
+                        {% endif %}
+                    </li>
+                    {% if user == seller %}
+                            <li class="product-view__element product-view__element--button">
+                                <a href="{{product.get_absolute_url}}edit">
+                                <div class="purchase-button">Maintain the product</div>
+                                </a>
+                            </li>
+                    {% elif not user.is_authenticated %}
+                        <li class="product-view__element product-view__element--button">
+                            <a href="{% url 'logpage' %}">
+                                <div class="purchase-button">LOG IN</div>
+                            </a>
+                        </li>
+                    {% else %}
+                    
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        <br>
+
+        <div class="product__description">
+            {{product.description}}
+        </div>
+
+    </section>
+</div>
+{% endblock %}
+

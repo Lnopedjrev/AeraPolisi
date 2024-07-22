@@ -1,0 +1,99 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load sass_tags %}
+
+{% block scripts-content %}
+<script src="{% static 'main/js/app.js'%}" defer></script>
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+1+Code:wght@100..700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tilt+Neon&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Jersey+10&display=swap" rel="stylesheet">
+{% endblock %}
+
+
+{% block header-content%}
+<section class="layers">
+    <div class="layers__container">
+            <div class="layers__item layer-0" style="background-image: url(media/images/main_page/background2a.jpg);" ></div>
+            <div class="layers__item layer-1" style="background-image: url(media/images/main_page/background1.png);" ></div>
+            <div class="layers__item layer-2" style="background-image: url(media/images/main_page/backchains1.png);" ></div>
+            <div class="layers__item layer-3">
+                <div class="header__bottom">
+                    <div class="navigation-map">
+                        <nav  class="navigation-map__container">
+                            <ul>
+                                <li>
+                                    <div class="navigation-map__element navigation-map__element--2"><a href="/shop/" class="navigation-map__link">Shop</a></div>
+                                </li>
+                                <li>
+                                    <div class="navigation-map__element navigation-map__element--3"><a href="#contact-section" class="navigation-map__link" id="contact-link" >Contact</a></div> 
+                                </li>
+                                <li>
+                                    <div class="navigation-map__element navigation-map__element--4"><a href="{% if request.user.is_authenticated %}/shop/create_product{% else %}/logpage/{% endif %}" class="navigation-map__link">Start selling!</a></div>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="layers__item layer-4"></div>
+            <div class="layers__item layer-5" style="background-image: url(media/images/main_page/lefthand1.png);"></div>
+            <div class="layers__item layer-6" style="background-image: url(media/images/main_page/frontchain1.png);"></div>
+            <div class="layers__item layer-7" style="background-image: url(media/images/main_page/frontchain2.png);"></div>
+            <div class="layers__item layer-8" style="background-image: url(media/images/main_page/frontchain3.png);"></div>
+            <div class="layers__item layer-9" style="background-image: url(media/images/main_page/righthand1.png);"></div>
+            <div class="layers__item layer-10" style="background-image: url(media/images/main_page/coin1.png);"></div>
+            <div class="layers__item layer-11" style="background-image: url(media/images/main_page/coin2.png);"></div>
+            <div class="layers__item layer-12" style="background-image: url(media/images/main_page/frontchainlast.png);"></div>
+    </div>
+</section>
+{%endblock%}
+
+{% block main-content %}
+
+
+<div class="content"> 
+    
+
+
+    <section class="main-information">
+        <div class="main-information__left">
+            <img class="main-information__item" src="media/images/main_page/main_page1.png" alt="alt">
+            <div class="text-block main-information__item">
+                <li>Review Details - Check the description and essential info.</li>
+                <li>Ask Away - Use the chat to query the seller.</li>
+            </div>
+        
+            <img class="main-information__item" src="media/images/main_page/main_page2.png" alt="alt">
+            <div class="text-block main-information__item">
+                <li>Join as a Seller - Or offer the product at your price, honoring the creator’s share.</li>
+                <li>Sell Your Items - Read the terms, then start your rewarding journey with us.</li>
+            </div>
+        </div>
+        <div class="main-information__right">
+            <div class="text-block main-information__item">
+                <h1 class="text-block__h">How does this ecommerse website work?</h1>
+                <p class="text-block__p"></p>
+                <li>Select Your Favorite Product - Find what you love.</li>
+            </div>
+            <img class="main-information__item" src="media/images/main_page/main_page3.png" alt="alt">
+            <div class="text-block main-information__item">
+                <li>Make it your own - Secure your purchase by purchasing it.The item will remain in your inventory until you order it or the deadline expires (you will receive your money back, except for some part of the price - <span class="marked-text"><a href="#">See more</a></span>).</li>
+                <li>One Click Away - Your desired item is almost yours, just go to your inventory in the profile and click the button.</li>
+            </div>
+            <img class="main-information__item" src="media/images/main_page/main_page4.png" alt="alt">
+        </div>
+    </section>
+    <section class="contact-section" id="contact-section">
+        <h1>Any questions left? Contact us!</h1>
+        <form class="contact-section__form" action="" method="post">
+            {% csrf_token %}
+            <div class="contact-section__fields">
+                {%for field in form%}
+                    <div class="contact-section__field"><label class="contact-section__form-field" for="{{ field.id_for_label }}">{{ field.label }}:</label><br>{{field}}</div>
+                {% endfor %}
+            </div>
+            <button class="submit-button" type="submit">Send message</button>
+        </form>
+    </section>
+</div>
+{% endblock %}

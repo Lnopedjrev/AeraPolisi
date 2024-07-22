@@ -1,0 +1,26 @@
+{% load static %}
+{% if products.has_other_pages %}
+<div hx-swap="innerHTML" hx-target='#seller-container'>
+        <nav class="seller-ownership__pagination pagination">
+            <span class="pagination__links-container">
+                {% if products.has_previous %}
+                    <button class="pagination__link" hx-get="?page=1">&laquo; first</button>
+                    <button class="pagination__link" hx-get="?page={{ products.previous_page_number }}"><</button>
+                {% endif %}
+                {% for p in paginator.page_range %}
+                    {% if products.number == p %}
+                        <span class="pagination__link-page current-page">
+                            {{ products.number }}
+                        </span>
+                        {% elif p >= products.number|add:-1 and p <= products.number|add:1 %}
+                        <span class="pagination__link-page"><button hx-get="?page={{ p }}"> {{ p }} </button></span>
+                    {% endif %}
+                {% endfor %}
+                {% if products.has_next %}
+                    <button class="pagination__link" hx-get="?page={{ page.next_page_number }}" >></button>
+                    <button class="pagination__link" hx-get="?page={{ products.paginator.num_pages }}">Last &raquo;</button>
+                {% endif %}
+            </span>
+        </nav>
+</div>
+{% endif %}

@@ -1,0 +1,19 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block main-content %}
+    <div class="container">
+        <div class="edit-container">
+            <div class="edit-container__content">
+                <form class="edit-container__box" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                        {% for field in form %}
+                            <div><label class="form-field" for="{{ field.id_for_label }}">{{ field.label }}:</label><br>{{field}}</div>
+                            <div class="reg-errors">{{field.errors}}</div>
+                        {% endfor %}
+                    <button type="submit" class="submit-button">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

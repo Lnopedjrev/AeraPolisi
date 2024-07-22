@@ -1,0 +1,168 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block main-content %}
+
+    <section class="room-container">
+        <div class="chat">
+            <div class="chat__box">
+                <div class="chat__seller-info">
+                    <div class="seller-img--chat seller-img"><img src="{{seller.image.url}}" alt="Image NOT FOUND"></div>
+                    
+                    <div class="chat__info-box">
+                        <a href="{{seller.get_absolute_url}}"><h2 class="chat__seller-name">{{seller.username}}</h2></a>
+                        <p class="chat__seller-status">
+                            {% if seller.customer.online_status %}
+                                Online
+                            {% else %}
+                                Offline
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="chat__settings">
+                            <i class="fa-solid fa-magnifying-glass"></i><input class="chat__message-search" type="search">
+                            <button class="chat__settings-button"><i class="fa-solid fa-gear"></i></button>
+                    </div>
+                </div>
+                <div class="chat__messages">
+                    <ul class="chat__list" id="messages">
+
+                    </ul>
+                </div>
+                <div class="chat__input-container">
+                    <div class="chat__product-input" id="chat-product-input">...</div>
+                    <div class="chat__input">   
+                        <input type="text" id="send-message">
+                        <button class="submit-button submit-button--chat" id="submit-button">></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="seller-ownership">
+            <button class="extend-button" value="unwrapped">
+                >>>
+            </button>
+            <div class="seller-ownership__products">
+                <h1>{{seller.username}}'s products</h1>
+                <div class="seller-ownership__container">
+                    <ul class="seller-ownership__list grid-items" id="seller-container">
+
+                        {% include 'chat_rooms/seller-products.html' %}
+                        
+                    </ul>  
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="{% static 'chat_rooms/js/htmx.min.js'%}"></script>
+    <script src="{% static 'chat_rooms/js/chat_rooms.js'%}"></script>
+{%endblock%}
+{% block additional-script %}
+    <script type="text/javascript">
+        let url = `ws://${window.location.host}/ws/chat/{{group}}/`
+        const chatSocket = new WebSocket(url)
+
+
+        let on_reload = window.performance.getEntriesByType("navigation")[0].type;
+
+        
+
+        setTimeout(function(){
+            if  (on_reload === 'reload' || on_reload === 'navigate'){
+                console.log('reloaded')
+                chatSocket.send(JSON.stringify({
+                    'command':'fetch_messages',
+                }))
+                var container = document.getElementById('messages');
+                container.scrollTop = container.scrollHeight; 
+            }
+        }, 1000);
+
+        chatSocket.onmessage = function(e){
+            let data = JSON.parse(e.data)
+            user = "user.username"
+            let side
+            let chat = document.getElementById('messages')
+            console.log(product_c)
+
+            var product_c = ''
+            var product_message = ''
+
+            function send_mes(message){
+                var cond = message.product_fc === 'nothing'      
+                if (!cond){
+                    product_c = `
+                                <div class="product-image"><img src="${message.product_fc.product_image}" alt="Image NOT FOUND"></div>
+                                <div class="product__info">
+                                    ${message.product_fc.name}
+                                    <div class="product__price">${message.product_fc.price}</div>
+                                </div> 
+                                `
+                                 
+                    product_message = `
+                                <a class="chat__product-link" href="${message.product_fc.product_url}"><div class="chat__product-message"> ${message.product_fc.name} $${message.product_fc.price}</div>  <div class="chat__product-full"> ${product_c} </div></a>
+                    `
+                }else{
+                    product_c = ''
+                    product_message = ''
+                }
+                if (message.author == "{{user.username}}"){
+                    side = '--right'
+                }else{
+                    side = '--left'
+                }
+                chat.insertAdjacentHTML("afterbegin",
+                        `<li class="chat__element chat__element${side}">
+                            <div class="chat__element-content">
+                                ${product_message}
+                                <div class="chat__message" contenteditable="true">
+                                    ${message.content}   
+                                </div>
+                                <div class="chat__information">
+                                    <span>${message.sended}</span>
+                                    <span>${message.author}</span>
+                                </div>
+                            </div>
+                        </li>`)
+                
+                }
+
+                if (data.type === "fetched"){
+                    for (let i = 0;i <data.messages.length;i++){
+                        send_mes(data.messages[i], last=true)
+                    }
+                }
+                if (data.type === 'send_message'){
+                    send_mes(data.message)
+                }
+        }
+        
+        
+
+
+        let submit_b = document.getElementById('submit-button')
+        
+        submit_b.addEventListener('click', (e) => {
+            let message = document.getElementById('send-message')
+            let product = document.getElementById("chat-product-input")
+            let product_id = ''
+            if (product.innerHTML != "..."){
+                let product_name = product.querySelector('.product__name').innerHTML
+                product_id = product_name.slice(0,2)
+            }
+
+            if ( message ){
+                chatSocket.send(JSON.stringify({
+                    'message': message.value,
+                    'product_id': product_id,
+                    'command': 'new_message',
+                    'author': "{{user.username}}",
+                }))
+            }
+            message.value = ''
+            product.innerHTML = '...'
+        })
+
+        let product_input = document.getElementById('chat-product-input')
+
+    </script>
+{% endblock %}

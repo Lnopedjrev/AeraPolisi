@@ -1,0 +1,12 @@
+@import "base";
+@import "main_page";
+@import "logapp/static/logapp/css/logapp.scss";
+@import "shop/static/shop/css/shop.scss";
+@import "management/static/management/css/management.scss";
+@import "chat_rooms/static/chat_rooms/css/chat_rooms.scss";
+@import "googlelogin";
+
+
+$color_p: #FF6F61; //primary color
+$color_s: #FFF8E1; //secondary color
+$color_b: #6200EA; //for text and background contrast.

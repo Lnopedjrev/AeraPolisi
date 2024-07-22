@@ -1,0 +1,27 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block main-content %}
+{% load socialaccount %}
+<div class="login-container">
+    <div class="login-container__left-side">
+        <p class="login-container__text"><span id="text"></span><span class='console-underscore' id='console'>&#95;</span></p></div>
+    <div class="login-container__right-side">
+        <div class="login-container__box"><p>Sign in</p>
+            <form class="login-container__form" method="post">
+                {%csrf_token%}
+                {% for field in form %}
+                    <div><label class="login-container__field" for="{{ field.id_for_label }}">{{ field.label }}:</label></div>
+                    {{field}}
+                    <div class="reg-errors">{{field.errors}}</div>
+                {% endfor %}
+                <button type="submit" class="submit-button" >Log in</button>
+            </form>
+            <p>or</p>
+            <a href="{% url 'regpage' %}">Create new account!</a> | <a href="{% provider_login_url 'google' %}">Login with google!</a>
+            
+        </div>
+        <div class="login-container__form-error">{{ form.non_field_errors }}</div>
+    </div>
+</div>
+<script src="{% static 'main/js/nothing.js'%}"></script>
+{%endblock%}

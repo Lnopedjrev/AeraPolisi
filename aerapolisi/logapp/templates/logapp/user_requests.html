@@ -1,0 +1,61 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block main-content %} 
+    <div class="container">
+        <section class="requests-managing">
+            <div class="requests-managing__container">
+                <ul class="products-lists__list">
+                    {% for req in object_list %}
+                        <li class="products-lists__element">
+                            <div class="products-lists__product-image"><img src="{{req.last_order.offer.product.get_first_image}}" alt="Image NOT FOUND"></div>
+                            <div class="products-lists__product-info">                   
+                                <ul class="products-lists__box">
+                                    <li>{{req.last_order.offer.product}}</li>
+                                    <li>From: <a href="{{req.last_order.offer.owner.user.get_absolute_url}}"><span class="marked-text">{{req.last_order.offer.owner}}</span></a> <a href="/chat_rooms/{{req.last_order.offer.owner.user}}_{{user.username}}"><i class="fa-solid fa-message"></i></a></li>
+                                    <li>Number requested: {{req.number}}</li>
+                                    <li>Requested:{{req.date_requested}} </li>
+                                    {% if not req.last_order.offer.product.service%} 
+                                        <li>Adress:{{req.shipping.address}}</li>
+                                        <li>City: {{req.shipping.city}}</li>
+                                        <li>State: {{req.shipping.state}}</li>
+                                        <li>Zipcode: {{req.shipping.zipcode}} </li>
+                                    {% endif %}
+                                </ul>
+                            </div>  
+                            <button class="set_complete-button" id="{{req.last_order.id}}" data-action="complete" >Completed</button>
+                        </li>
+                    {%endfor%}
+                </ul>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block additional-script %}
+    <script>
+        var reqs_buttons = document.getElementsByClassName("set_complete-button")
+
+        for (let i = 0;i <reqs_buttons.length;i++){
+            reqs_buttons[i].addEventListener('click', function(e){
+                updateOrder(this.id, this.dataset.action);
+            })
+        }
+
+
+        function updateOrder(orderId,action){
+            var url = '/logpage/update_order/'
+
+            fetch(url,{
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json',
+                    'X-CSRFToken' : csrftoken,
+                },
+                body:JSON.stringify({'orderId': orderId, 'action':action})
+            })
+        }
+    </script>
+
+
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block main-content %}
+<section class="check-container">
+    <ul class="check-container__list">
+        {% for product in page_obj %}
+            <li class="check-container__element">
+                <div class="check-product">
+                    <div class="check-product__left">
+                        <div class="product-image"><img src="{{product.get_first_image}}" alt="Image NOT FOUND"></div>
+                    </div>
+                    <div class="check-product__right">
+                        <a href="{{product.get_absolute_url}}"><h2>{{product.name}}</h2></a>
+                        <div class="check-product__content">
+                            <ul class="check-product__features">
+                                <li class="check-product__feature"><div class="check-product__seller">Seller:<a href="{{product.seller.get_absolute_url}}">{{product.seller}}</a><div class="seller-img"><a href="{{product.seller.get_absolute_url}}"><img src="{{product.seller.image.url}}" alt=""></a></div></div></li>
+                                <li class="check-product__feature">
+                                    Categories:<ul>
+                                            {% for category in product.categories.all %} 
+                                                {{category.name}}, 
+                                            {% endfor %}
+                                    </ul>
+                                </li>
+                                <li class="check-product__feature">Quantity: {{product.quantity}}</li>
+                                <!-- <li class="check-product__feature">Supposed price: ${{product.price}}</li> -->
+                                <li class="check-product__feature">
+                                    Service: 
+                                    {% if product.service %}
+                                    <i class="fa-solid fa-square-check" style="color: #4e7955;"></i>
+                                    {% else %}
+                                    <i class="fa-solid fa-xmark" style="color: #6f1111;"></i>
+                                    {% endif %}
+                                </li>
+                            </ul>
+                            <div class="check-product__description">{{product.description}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="check-container__buttons">
+                    <input class="manage-button" type="button" data-action="approve" data-product="{{product.id}}" value="Approve">
+                    <input class="manage-button" type="button" data-action="decline" data-product="{{product.id}}" value="Decline">
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'main/base.html' %}
+{% load static%}
+
+{% block main-content %}
+<div class="container">
+    <div class="favourite__container">
+        <h1> Your favourite products: </h1>
+        <div class="favourite__shell">
+            <ul class="grid-items favourite--grid">
+                {% for product in items %}
+                <li class="favourite__element grid-element">
+                    <div class="product">
+                        <div class="product-image"><img src="{{product.get_first_image}}" alt="Image NOT FOUND"></div>
+                        <a class="product__link" href="{{product.get_absolute_url}}"><div class="product-personal">>>></div></a>
+                        <!-- <div class="product__price">${{product.price|floatformat:2}}</div> -->
+                        <div class="product__info">
+                            <a class="product__name" href="{{ product.get_absolute_url }}">{{product.name}}</a>
+                            <div class="favourite-box">
+                                <button class="favourite-button" id="favourite-add"  style="display: none;" data-product="{{product.id}}" data-action="add"><i class="fa-regular fa-heart" style="color: #931a44;"></i></button>
+                                <button class="favourite-button" id="favourite-remove" data-product="{{product.id}}" data-action="remove"><i class="fa-solid fa-heart" style="color: #931a44;"></i></button>
+                            </div>
+                        </div>
+                        <div class="seller-img"><a href="{{ product.seller.get_absolute_url}}"><img src="{{ product.seller.image.url}}" alt=""></a></div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{%endblock%}

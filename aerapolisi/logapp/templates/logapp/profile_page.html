@@ -1,0 +1,61 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block main-content %}
+<div class="container">
+    <div class="profile-content">
+        <section class="profile-content__information">
+        <div class="profile-content__about">
+            <ul class="profile-content__content">
+                <li class="profile-content__trait">
+                    <div class="profile-content__img">
+                        <img src="{{page_user.image.url}}" style="width:100%">
+                    </div><h1>{{page_user.username}}</h1>
+                </li>
+                {% if page_user.date_birth and page_user.get_gender %}
+                    <li class="profile-content__trait"><p><span>AGE:</span>  {{page_user.get_age}}</p></li>
+                    <li class="profile-content__trait"><p><span>GENDER:</span>  {{page_user.get_gender}}</p></li>
+                {% endif %}
+                {% if page_user == user%}
+                    <li class="profile-content__trait profile-content__balance-container"><p><span>Balance: </span>{{page_user.balance}}<img class="coin-image" src="/media/images/coinsymbol.png" alt=""><a href="{% url 'balance_rl'%}"><i class="fa-solid fa-plus fa-2xs" style="color: #e5d245;"></i></a></p></li>
+                {% else %}
+                    <div class="profile-content__chat-link">
+                        <a href="/chat_rooms/{{page_user.username}}"><i class="fa-solid fa-comments-dollar"></i></a> Chat
+                    </div>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="profile-content__preferences">
+            <div class="profile-content__extra-content">
+                <h2>About {{page_user.username}}:</h2>
+                <div class="profile-content__description">
+                    
+                    <a class="change-link {{extra_style}}" href="{{page_user.get_absolute_url}}edit"><i class="fa-solid fa-pencil"></i></a>
+                    {{page_user.description}}</div>
+            </div>
+        </div></section>
+
+        <section class="profile-content__inventory">
+            <a href="{% url 'products-maintain' %}"><div class="profile-content__maintain {{extra_style}}"> Maintain the products! </div></a>
+
+            <div class="profile-content__goods-container">
+                    <ul class="grid-items">
+                        {% for product in products %}
+                            {% if product.ontest == False %}
+                                <li class="grid-element">
+                                    <div class="profile-content__element">
+                                        <div class="product-image"><img src="{{product.get_first_image}}" alt="Image NOT FOUND"></div>
+                                        <a class="product__link" href="{{product.get_absolute_url}}"><div class="product-personal">>>></div></a>
+                                        <div class="product__info--profile product__info">
+                                            <a class="product__name" href="{{product.get_absolute_url}}">{{product.name}}</a>
+                                        <div class="seller-img"><a href="{{product.seller.get_absolute_url}}"><img src="{{product.seller.image.url}}" alt=""></a></div>
+                                    </div>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}

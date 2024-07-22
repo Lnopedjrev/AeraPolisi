@@ -1,0 +1,16 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block main-content %}
+<div class="content">
+    <div class="google-login">
+        <p class="google-login__line"> <h1> Sign In Via {{ provider }} </h1></p>
+        <p class="google-login__sub-line"> You are about to sign in using a third-party account from {{ provider }}</p>
+        <form class="google-login__form" method="post">
+            {%csrf_token%}
+            <button type="submit" class="submit-button">Continue</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

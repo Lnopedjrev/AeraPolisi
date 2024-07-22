@@ -1,0 +1,21 @@
+
+
+.google-login{
+    position: absolute;
+    top: 33%;
+    left: 17%;
+    display: flex;
+    flex-direction: column;
+    row-gap: 3vh;
+    font-size: 1.8vw;
+    font-family: $desc_font;
+
+    &__sub-line{
+        color: lighten($color: $background_color, $amount: 14);
+        text-shadow: 3px 0 0 $surface_color;
+    }
+
+    &__line{
+        color: $color_on_sur
+    }
+}

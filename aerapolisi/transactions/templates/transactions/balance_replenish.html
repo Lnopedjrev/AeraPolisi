@@ -1,0 +1,25 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block scripts-content %}
+<script src="https://js.stripe.com/v3/"></script>
+{% endblock %}
+
+
+{% block main-content %}
+<div class="content">
+    <div class="transaction-info">
+        <form class="transaction-info__form" method='post'>
+            {%csrf_token%}
+            {%for field in form%}
+                <div class="transaction-info__field"><label class="form-field" for="{{ field.id_for_label }}">{{ field.label }}:</label><br>{{field}}
+                <div class="reg-errors">{{field.errors}}</div></div>
+            {%endfor%}
+            <button class="submit-button" id="submit">Submit</button>
+            <div>{{ form.non_field_errors }}</div>
+        </form>
+
+    </div>
+
+</div>
+{% endblock %}

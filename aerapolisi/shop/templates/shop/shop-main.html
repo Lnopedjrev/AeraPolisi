@@ -1,0 +1,67 @@
+{% extends 'main/base.html' %}
+{% load static%}
+{% block header-content %}{% endblock %}
+{% block main-content %}
+    <div class="store-container">
+        <div class="navigation">
+            <span>Find by filters</span>
+            <form 
+                action="" 
+                class="navigation__form" 
+                method="get"
+                hx-get="{% url 'shop' %}"
+                hx-target="#shop-elements"
+                hx-swap="outerHTML"
+            >
+                {%csrf_token%}
+                <ul class="navigation__container">
+                    <li class="navigation__element">
+                        <label class="navigation__field">Price: </label><br>
+                            <div class="navigation__range">
+                                <input id="minprice-range" type="range" name="price-range-min" min="0" max="200" step="5" value="5" >
+                                <input id="maxprice-range" type="range" name="price-range-max" min="0" max="200" step="5" value="200" >
+                            </div>
+                            <br>
+                            <div class="navigation__inner-box">
+                                <div><label class="navigation__inner-label" for="">Min</label><br><input type="number" name="price-min" min="0" value=5 id="minprice"></div>
+                                <div><label class="navigation__inner-label" for="">Max</label><br><input type="number" name="price-max" min="0"  value=200 id="maxprice"></div>
+                            </div>
+                            <label class="navigation__inner-label" for=""></label>
+                        </li>
+                    <li class="navigation__element">
+                        <label class="navigation__field" for="" style="text-align: center;">Only:</label><br>
+                            {{ form.is_service }}
+                        </li>
+                    <li class="navigation__element">
+                        <label class="navigation__field" for="">Seller:</label><br>
+                        <input class="navigation__seller-search" type="text" name="seller-search" placeholder="Enter a seller's username">
+                        </li>
+                    <li class="navigation__element">
+                        <label class="navigation__field" for="">By category:</label><br>
+                            {{form.categories}}
+                        </li>
+                </ul>
+                <input class="submit-button" type="submit" value="find" style="margin-top: 50px;">
+            </form>
+        </div>
+
+        <div class="suppose-text" id="suppose-text"><p>Sell your own thing!</p></div>
+        <div class="suppose-product" id="suppose_div"><a href="{% url 'product-create' %}"><div class="suppose-product__container"><i class="fa-solid fa-plus" style="color: #28364d;"></i></div></a></div>   
+        <section class="showcase">
+            <div class="search">
+                <form class="search__form" action="">
+                    <input class="search-field" type="search" name="search-product" placeholder= "Search by name">
+                    <input class="submit" type="submit" value=">">
+                </form>
+                <a href="{% url 'favourite' %}"><div class="favourite"><div><i class="fa-solid fa-heart" style="color: #931a44;"></i> Check your favourite!</div></div></a>
+            </div>
+            <div class="showcase__content">
+                <div class="showcase__shell">
+                        {% include 'shop/shop-main__search-results.html' with  page_obj=page_obj %}
+                </div>
+            </div>
+        </section>
+    </div>
+    <script src="{% static 'shop/js/filter.js'%}"></script>
+    <script src="{% static 'chat_rooms/js/htmx.min.js'%}"></script>
+{% endblock %}
