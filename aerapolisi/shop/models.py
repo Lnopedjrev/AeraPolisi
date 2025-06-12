@@ -1,8 +1,10 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import Group
+from django.core.validators import MinValueValidator, MaxValueValidator, FileExtensionValidator
 
 from logapp.models import User
+from .managers import ProductOffersManager
 
 
 class Customer(models.Model):
@@ -11,6 +13,12 @@ class Customer(models.Model):
     name = models.CharField(max_length=200, null=True)
     email = models.EmailField(null=True)
     online_status = models.BooleanField(default=False)
+
+    def get_favourite_products_list(self):
+        favourite = Favourite.objects.get(customer=self)
+        fav_items = favourite.favouriteitem_set.all()
+        fav_list = [i.product for i in fav_items]
+        return fav_list
 
     def __str__(self):
         return self.name
@@ -31,8 +39,11 @@ class ProductCategory(models.Model):
 class Products(models.Model):
     name = models.CharField(max_length=40)
     description = models.TextField(null=True, blank=True)
-    quantity = models.IntegerField(default=0)
-    price = models.FloatField(default=100, blank=True)
+    quantity = models.IntegerField(default=0, validators=[MinValueValidator(1, 'Quantity must be greater than 0')])
+    price = models.FloatField(default=100, blank=True,
+                              validators=[
+                                  MinValueValidator(0.01, 'Price must be greater than 0.01')
+                              ])
     created = models.DateTimeField(auto_now_add=True, auto_now=False)
     updated = models.DateTimeField(auto_now_add=False, auto_now=True)
     service = models.BooleanField(default=False, null=True, blank=False)
@@ -65,6 +76,8 @@ class ProductOffers(models.Model):
     availability = models.IntegerField(default=0)
     is_active = models.BooleanField(default=False)
 
+    objects = ProductOffersManager()
+
     def __str__(self):
         return '%s - %s - %s' % (self.product.name, self.owner, self.created)
 
@@ -89,7 +102,14 @@ class ProductOffers(models.Model):
 class ProductsGallery(models.Model):
     product = models.ForeignKey(Products, default=None,
                                 on_delete=models.CASCADE, null=True)
-    image = models.ImageField(upload_to='products-images')
+    image = models.ImageField(upload_to='products-images',
+                              validators=[
+                                  FileExtensionValidator(
+                                        allowed_extensions=['jpg', 'jpeg', 'png', 'webp']
+                                  ),
+                              ],
+                              null=True,
+                              blank=True)
     created = models.DateTimeField(auto_now_add=True, auto_now=False)
     updated = models.DateTimeField(auto_now_add=False, auto_now=True)
 

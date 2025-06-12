@@ -16,7 +16,7 @@
                     <li class="profile-content__trait"><p><span>GENDER:</span>  {{page_user.get_gender}}</p></li>
                 {% endif %}
                 {% if page_user == user%}
-                    <li class="profile-content__trait profile-content__balance-container"><p><span>Balance: </span>{{page_user.balance}}<img class="coin-image" src="/media/images/coinsymbol.png" alt=""><a href="{% url 'balance_rl'%}"><i class="fa-solid fa-plus fa-2xs" style="color: #e5d245;"></i></a></p></li>
+                    <li class="profile-content__trait profile-content__balance-container"><p><span>Balance: </span>{{page_user.balance}}<img class="coin-image" src="{% static 'main/img/coin1.png' %}" alt=""><a href="{% url 'balance_rl'%}"><i class="fa-solid fa-plus fa-2xs" style="color: #e5d245;"></i></a></p></li>
                 {% else %}
                     <div class="profile-content__chat-link">
                         <a href="/chat_rooms/{{page_user.username}}"><i class="fa-solid fa-comments-dollar"></i></a> Chat

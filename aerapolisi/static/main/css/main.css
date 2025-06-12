@@ -75,7 +75,8 @@ i {
   min-width: 500px;
   padding: 0 10px;
   margin: 0 auto;
-  margin-bottom: 10px; }
+  margin-bottom: 10px;
+  min-height: 100vh; }
 
 .main {
   padding: 10px;
@@ -215,7 +216,7 @@ i {
   color: #7d663d;
   text-shadow: 1px 1px 1px #e5d245f1;
   margin-top: 20px;
-  font-size: calc(var(--index) *2);
+  font-size: calc(var(--index) *1);
   font-family: "Bebas Neue", sans-serif;
   transition: 1s ease-out;
   transition-property: color,text-shadow; }
@@ -493,6 +494,9 @@ i {
     width: 80%;
     height: 3vh; }
 
+.bottom-container {
+  min-width: 500px; }
+
 :root {
   --font-size: calc((1vw + 1vh)*1.3) ;
   scroll-behavior: smooth; }
@@ -761,7 +765,8 @@ i {
 .create-box {
   display: flex;
   justify-content: center;
-  padding: 10px; }
+  padding: 10px;
+  width: 100%; }
   .create-box div {
     margin-top: 20px; }
   .create-box h2 {
@@ -774,7 +779,8 @@ i {
     align-items: center;
     flex-direction: column;
     padding: 30px;
-    min-height: 80vh;
+    height: inherit;
+    width: inherit;
     border: 2px solid #191922;
     background-color: #101016;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px; }

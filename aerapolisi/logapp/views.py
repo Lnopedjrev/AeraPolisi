@@ -1,4 +1,3 @@
-
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
@@ -7,17 +6,16 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import logout, login
 from django.db.models import Q
+from shop.models import Customer, Favourite
 
 import json
 
 from logapp.models import User
-from .utils import DataMixin
 from shop.models import (ProductOffers, Products,
                          OrderRequests, OrderInfo)
 from .forms import (LoginUserForm, RegisterUserForm,
                     EditUserForm, EditProductForm,
                     EditOfferForm)
-from .services import create_new_customer, get_all_user_products
 
 
 class LoginUser(UserPassesTestMixin, LoginView):
@@ -52,8 +50,15 @@ class RegisterUser(UserPassesTestMixin, CreateView):
         return context
 
     def form_valid(self, form):
+        """Creating new customer and attaching favourite"""
         user = form.save()
-        create_new_customer(user)
+        customer_name = user.username + '_customer'
+        customer, created = (Customer
+                             .objects
+                             .get_or_create(user=user,
+                                            name=customer_name,
+                                            email=user.email))
+        Favourite.objects.create(customer=customer)
 
         backend = 'django.contrib.auth.backends.ModelBackend'
         login(self.request, user, backend=backend)
@@ -68,7 +73,7 @@ def logoutuser(request):
     return redirect("main")
 
 
-class UserShow(DetailView, DataMixin):
+class UserShow(DetailView):
     model = User
     template_name = "logapp/profile_page.html"
     context_object_name = "page_user"
@@ -83,14 +88,22 @@ class UserShow(DetailView, DataMixin):
         if user != visitor:
             extra_style = 'hidden'
 
-        own_products = get_all_user_products(user)
-        c_def = self.get_user_context(title=user,
-                                      extra_style=extra_style,
-                                      products=own_products)
-        return dict(list(context.items()) + list(c_def.items()))
+        productoffers = (ProductOffers
+                         .objects
+                         .filter(Q(owner=self.customer)
+                                 | Q(product__seller=self))
+                         .filter(availability__gt=0)
+                         .select_related('product', 'product__seller')
+                         .prefetch_related('product__productsgallery_set'))
+
+        own_products = list(set([a.product for a in productoffers]))
+        view_context = dict(title=user,
+                            extra_style=extra_style,
+                            products=own_products)
+        return {**context, **view_context}
 
 
-class EditUser(UserPassesTestMixin, DataMixin, UpdateView):
+class EditUser(UserPassesTestMixin, UpdateView):
     model = User
     form_class = EditUserForm
     template_name = "logapp/profile_edit_page.html"
@@ -110,7 +123,7 @@ class EditUser(UserPassesTestMixin, DataMixin, UpdateView):
         return page_user == page_user
 
 
-class ProductsMaintain(DataMixin, LoginRequiredMixin, ListView):
+class ProductsMaintain(LoginRequiredMixin, ListView):
     model = ProductOffers
     template_name = 'logapp/user_warehouse.html'
 
@@ -135,11 +148,11 @@ class ProductsMaintain(DataMixin, LoginRequiredMixin, ListView):
                       last_order__complete=False)
                  .count())
         title = str(user).capitalize() + ' maintains products'
-        c_def = self.get_user_context(title=title, ln_req_l=ln_rl)
-        return dict(list(context.items()) + list(c_def.items()))
+        view_context = dict(title=title, ln_req_l=ln_rl)
+        return {**context, **view_context}
 
 
-class EditProduct(UserPassesTestMixin, DataMixin, UpdateView):
+class EditProduct(UserPassesTestMixin, UpdateView):
     model = Products
     form_class = EditProductForm
     template_name = "logapp/edit_product.html"
@@ -167,7 +180,7 @@ class EditProduct(UserPassesTestMixin, DataMixin, UpdateView):
         return super().form_invalid(form)
 
 
-class EditOffer(DataMixin, UpdateView):
+class EditOffer(UpdateView):
     model = ProductOffers
     form_class = EditOfferForm
     template_name = "logapp/edit_offer.html"
@@ -187,7 +200,7 @@ class EditOffer(DataMixin, UpdateView):
         return reverse('products-maintain')
 
 
-class RequestsCheck(DataMixin, ListView, LoginRequiredMixin):
+class RequestsCheck(ListView, LoginRequiredMixin):
     template_name = "logapp/user_requests.html"
     model = OrderRequests
     paginate_by = 5

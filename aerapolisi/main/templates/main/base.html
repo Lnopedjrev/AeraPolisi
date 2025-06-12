@@ -1,5 +1,5 @@
 {% load sass_tags %}
-{% load static%}
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -52,7 +52,7 @@
                                 </li>
                                 {% if request.user.is_authenticated %}
                                     <li class="menu__item">
-                                        <div class="menu__box"><a class="menu__user-link" href="{{user.get_absolute_url}}">{{user.username}}</a>|<a href="{% url 'logout' %}">Log Out</a><i class="fa-regular fa-user"></i> {{user.balance}} <img class="coin-image" src="/media/images/coinsymbol.png" alt=""></div>
+                                        <div class="menu__box"><a class="menu__user-link" href="{{user.get_absolute_url}}">{{user.username}}</a>|<a href="{% url 'logout' %}">Log Out</a><i class="fa-regular fa-user"></i> {{user.balance}} <img class="coin-image" src="/media/images/main_page/coinsymbol.png" alt=""></div>
                                     </li>
                                 {% else %}
                                     <li class="menu__item">
@@ -107,7 +107,7 @@
             </main>
     
             <footer class="footer">
-                <div class="container">
+                <div class="bottom-container">
                     <div class="footer__top">
                         <a class="logo" href="{% url 'main' %}" style="background: none;">
                             <img src="/media/images/main_page/light_logo.svg" alt="">
@@ -124,7 +124,7 @@
                             <div class="footer__item">
                                 <h2>Contacts</h2>
                                 <ul class="footer__list">
-                                    <li class="footer__element"><a class="footer__link" href="#">Send email</a></li>
+                                    <li class="footer__element"><a class="footer__link" href="/#contact-section">Send email</a></li>
                                     <li class="footer__element"><a class="footer__link" href="#"></a>Telegram</li>
                                     <li class="footer__element"><a class="footer__link" href="#"></a>Reddit</li>
                                 </ul>

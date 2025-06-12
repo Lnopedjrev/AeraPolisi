@@ -61,8 +61,13 @@ $color_on_s: #080707;// for text on secondary
         div{
             margin-top: min(3px);
         }
-        a:hover{
+        a{
             color: $color_on_sur;
+            transition: color 0.8s ease-out;
+            margin-top: 1vh;
+        }
+        a:hover{
+            color: lighten($surface_color, 30%);
         }
     }
 
@@ -91,6 +96,7 @@ $color_on_s: #080707;// for text on secondary
     display: flex;
     justify-content: center;
     padding: 10px;
+    width: 100%;
 
 
     div{
@@ -100,7 +106,7 @@ $color_on_s: #080707;// for text on secondary
     h2{
         color: $color_on_sur;
         font-family: $profile_font;
-        font-size: 4vw;
+        font-size: 3vw;
         text-shadow: 3px 3px 0px #000, 
                     -4px 0 0px $surface_color,
                     3px 4px 0 #000;
@@ -111,7 +117,8 @@ $color_on_s: #080707;// for text on secondary
         align-items: center;
         flex-direction: column;
         padding: 30px;
-        min-height: 80vh;
+        height: inherit;
+        width: inherit;
         border: 2px solid $surface_color;
         background-color: darken($surface_color, 4%);
         box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
@@ -121,6 +128,11 @@ $color_on_s: #080707;// for text on secondary
         display: block;
         text-align: center;
         height: 100%;
+        textarea, input{
+            background-color: lighten($background_color, 25%);
+            color: $color_on_sur;
+        }
+
     }
     
     &__elements{
@@ -135,6 +147,7 @@ $color_on_s: #080707;// for text on secondary
 
 //profile content
 .profile-content{
+    position: relative;
     min-height: 100vh;
     display: block;
     padding: 20px;
@@ -153,8 +166,8 @@ $color_on_s: #080707;// for text on secondary
         display:flex;
         font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
         position: absolute;
-        top: 25%;
-        left: 63%;
+        top: 5%;
+        left: 69%;
     }
 
     .product__info{
@@ -198,7 +211,9 @@ $color_on_s: #080707;// for text on secondary
         padding: 10px calc(var(--index) *1.2);
         font-family: $profile_font;
         font-size: calc(var(--index) *1.1);
-        color: darken($color: $color_p, $amount:7);
+        color: darken($color: $color_p, $amount:14);
+        text-shadow: 5px 1px 10px darken($surface_color, 5%);
+        
         p{
             margin-right: 4vw;
         }
@@ -208,10 +223,10 @@ $color_on_s: #080707;// for text on secondary
             font-family: $desc_font;
 
             text-shadow: 0 2px 1px darken($surface_color, 5%);
-            color: $color_on_s;
+            color: lighten($color_on_p, 24%);
         }
         h1{
-            color: #000;
+            color: $color_on_sur;
         }
     }
 
@@ -274,6 +289,13 @@ $color_on_s: #080707;// for text on secondary
         border: 2.3px solid rgb(198, 193, 193);
         border-radius: 0px 0px 5px 5px;
         transition: border-color 2s;
+    }
+
+    &__chat-link{
+        position: absolute;
+        left: 66%;
+        top: 15%;
+        font-size: calc(var(--index) *0.9);
     }
 }
 

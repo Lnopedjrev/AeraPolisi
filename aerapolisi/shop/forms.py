@@ -36,12 +36,16 @@ class ProductPurchaseForm(forms.ModelForm):
         fields = '__all__'
 
 
-class FilterProductForm(forms.Form):
+try:
     cagors = ProductCategory.objects.all()
+    CHOICES1 = [(c.name, c.name.lower()) for c in cagors]
+except Exception as e:
+    print(e)
     CHOICES1 = []
-    for c in cagors:
-        name = str(c.name)
-        CHOICES1.append((name, name.lower()))
+
+
+
+class FilterProductForm(forms.Form):
 
     CHOICES2 = [('Service', 'Service'), ('Products', 'Products')]
     categories = forms.MultipleChoiceField(choices=CHOICES1, required=False)

@@ -113,6 +113,8 @@ i{
     padding: 0 10px;
     margin:0 auto;
     margin-bottom: 10px;
+    min-height: 100vh;
+
 }
 
 .main{
@@ -280,7 +282,7 @@ i{
     color: $color_s;
     text-shadow: 1px 1px 1px $color_p;
     margin-top: 20px;
-    font-size: calc(var(--index) *2);
+    font-size: calc(var(--index) *1);
     font-family: $desc_font;
     transition:1s ease-out;
     transition-property: color,text-shadow;
@@ -615,4 +617,8 @@ i{
         }
         font-size: calc(var(--index) *0.85);
     }
+}
+
+.bottom-container{
+    min-width: 500px;
 }

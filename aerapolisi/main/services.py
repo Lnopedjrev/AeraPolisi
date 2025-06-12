@@ -1,32 +1,7 @@
 from shop.models import Favourite, FavouriteItem, ProductOffers
-
-
-def regulate_favourite(product, action, customer):
-    """Adds or removes product from the customer's favourite list"""
-    favourite, created = Favourite.objects.get_or_create(customer=customer)
-    favouriteItem, created = (FavouriteItem
-                              .objects
-                              .get_or_create(favourite=favourite,
-                                             product=product))
-    if action == 'remove':
-        favouriteItem.delete()
-
-
-def regulate_new_product(product, action):
-    """Creates an initial offer based on product instance,
-        if declined - deletes the product"""
-    if action == "decline":
-        product.delete()
-    else:
-        product.ontest = False
-        product.save()
-        productoffer, created = (ProductOffers
-                                 .objects
-                                 .get_or_create(product=product,
-                                                price=product.price,
-                                                availability=product.quantity,
-                                                owner=product.seller.customer))
-
+from django.core.paginator import Paginator
+from django.conf import settings
+from django.core.mail import EmailMessage
 
 def paginate(request, qers, limit=3):
     paginated_qers = Paginator(qers, limit)
@@ -43,3 +18,20 @@ def is_htmx(request, boost_check=True):
 
     elif boost_check and not hx_boost and hx_request:
         return True
+
+
+def send_smtp_email_message(user, name, recipient_email, message):
+    # take the email sending logic into services
+    sender_email = settings.EMAIL_HOST_USER
+    message = f'From {user} {message}'
+
+    email_message = EmailMessage(
+        subject="Contact Form Submission from {} by email {}".format(name, sender_email),
+        body=message,
+        from_email=sender_email,
+        to=[recipient_email, ],
+        headers=[],
+        reply_to=[sender_email]
+    )
+
+    email_message.send()

@@ -12,7 +12,7 @@
                             <div class="products-lists__product-info">                   
                                 <ul class="products-lists__box">
                                     <li>{{req.last_order.offer.product}}</li>
-                                    <li>From: <a href="{{req.last_order.offer.owner.user.get_absolute_url}}"><span class="marked-text">{{req.last_order.offer.owner}}</span></a> <a href="/chat_rooms/{{req.last_order.offer.owner.user}}_{{user.username}}"><i class="fa-solid fa-message"></i></a></li>
+                                    <li>From: <a href="{{req.last_order.offer.owner.user.get_absolute_url}}"><span class="marked-text">{{req.last_order.offer.owner}}</span></a> <a href="/chat_rooms/{{req.last_order.offer.owner.user}}"><i class="fa-solid fa-message"></i></a></li>
                                     <li>Number requested: {{req.number}}</li>
                                     <li>Requested:{{req.date_requested}} </li>
                                     {% if not req.last_order.offer.product.service%} 

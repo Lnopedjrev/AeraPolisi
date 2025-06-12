@@ -1,5 +1,5 @@
 {% extends 'main/base.html' %}
-{% load static%}
+{% load static %}
 {% block header-content %}{% endblock %}
 {% block main-content %}
     <div class="store-container">
@@ -49,8 +49,11 @@
         <div class="suppose-product" id="suppose_div"><a href="{% url 'product-create' %}"><div class="suppose-product__container"><i class="fa-solid fa-plus" style="color: #28364d;"></i></div></a></div>   
         <section class="showcase">
             <div class="search">
-                <form class="search__form" action="">
-                    <input class="search-field" type="search" name="search-product" placeholder= "Search by name">
+                <form class="search__form"
+                      action="">
+                    <input class="search-field" type="search" name="search-product" placeholder= "Search by name" hx-get="{% url 'shop' %}"
+                    hx-target="#shop-elements"
+                    hx-swap="outerHTML" hx-trigger="change">
                     <input class="submit" type="submit" value=">">
                 </form>
                 <a href="{% url 'favourite' %}"><div class="favourite"><div><i class="fa-solid fa-heart" style="color: #931a44;"></i> Check your favourite!</div></div></a>

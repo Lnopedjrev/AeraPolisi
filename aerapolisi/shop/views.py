@@ -17,7 +17,6 @@ from main.utils import DataMixin
 from main.services import is_htmx
 from .forms import (SupposeProductForm, FilterProductForm,
                     ProductPurchaseForm, ShippingChangeForm)
-from .services import get_favourite_list, create_new_product
 
 
 class Shop(DataMixin, ListView):
@@ -40,62 +39,57 @@ class Shop(DataMixin, ListView):
                         .select_related('product', 'owner',
                                         'product__seller', 'owner__user')
                         .prefetch_related('product__productsgallery_set'))
+
         if is_htmx(self.request):
+            params = self.request.GET
 
-            def valid_get(field):
-                if self.request.GET.get(field):
-                    return self.request.GET.get(field)
-                else:
-                    return ''
-
-            filter_name = valid_get('search-product')
+            filter_name = params.get('search-product', '')
             new_queryset = (new_queryset
                             .filter(product__name__icontains=filter_name))
 
-            serv_html = valid_get('is_service')
-            if serv_html != '':
+            serv_html = params.get('is_service', None)
+            if serv_html is not None:
                 serv_html = True if serv_html == 'Service' else False
                 new_queryset = new_queryset.filter(product__service=serv_html)
 
-            min_range = valid_get('price-min')
-            max_range = valid_get('price-max')
-            if min_range != '' and max_range != '':
-                new_queryset = new_queryset.filter(product__price__gte=min_range,
-                                                product__price__lte=max_range)
+            min_range = params.get('price-min')
+            max_range = params.get('price-max')
+            if min_range is not None and max_range is not None:
+                new_queryset = new_queryset.filter(
+                                    product__price__gte=min_range,
+                                    product__price__lte=max_range
+                                    )
 
             categories = self.request.GET.getlist('categories')
             if categories:
                 new_queryset = (new_queryset
                                 .filter(product__categories__name__in=categories))
 
-            seller_name = valid_get('seller-search')
-            if seller_name != '':
+            seller_name = params.get('seller-search', None)
+            if seller_name is not None:
                 seller_inf = ''
                 try:
                     seller_inf = User.objects.get(username=seller_name)
                     new_queryset = new_queryset.filter(seller=seller_inf)
-                except ValueError:
-                    print("User doesn't exist")
+                except Exception as e:
+                    print(e)
         return new_queryset
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         req_user = self.request.user
-        if req_user.is_authenticated:
-            fav_list = get_favourite_list(req_user.customer)
-        else:
-            fav_list = []
-        c_def = self.get_user_context(title="Shop",
-                                      fav_list=fav_list,
-                                      form=FilterProductForm,
-                                      paginate_except=True)
-        return dict(list(context.items()) + list(c_def.items()))
+        fav_list = req_user.customer.get_favourite_products_list() if req_user.is_authenticated else []
+        view_context = dict(title="Shop",
+                            fav_list=fav_list,
+                            form=FilterProductForm,
+                            paginate_except=True)
+        return {**context, **view_context}
 
 
 def favourite(request):
     if request.user.is_authenticated:
         customer = request.user.customer
-        fav_items = get_favourite_list(customer)
+        fav_items = customer.get_favourite_products_list
     else:
         fav_items = []
 
@@ -109,8 +103,7 @@ class SupposeProduct(LoginRequiredMixin, DataMixin, CreateView):
 
     form_class = SupposeProductForm
     template_name = "shop/product-create_page.html"
-    success_url = reverse_lazy("main")
-    login_url = reverse_lazy("main")
+    login_url = reverse_lazy("logpage")
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -120,7 +113,19 @@ class SupposeProduct(LoginRequiredMixin, DataMixin, CreateView):
     def form_valid(self, form):
         user = self.request.user
         data = form.cleaned_data
-        create_new_product(user, data)
+        product, created = (Products
+                            .objects
+                            .get_or_create(seller=user,
+                                           name=data['name'],
+                                           description=data['description'],
+                                           quantity=data['quantity'],
+                                           price=data['price'],
+                                           service=data['service'],
+                                           ontest=True))
+        for category in data['categories']:
+            product.categories.add(category)
+        for image in data['images']:
+            ProductsGallery.objects.create(image=image, product=product)
         return redirect("shop")
 
 
@@ -140,23 +145,26 @@ class ProductShow(UserPassesTestMixin, DataMixin, DetailView):
         visitor = self.request.user
         seller = product.seller
         if visitor.is_authenticated and visitor != seller:
-            fav_list = get_favourite_list(visitor.customer)
+            # check if the product is in the favourite list
+            fav_list = visitor.consumer.get_favourite_products_list()
         else:
             fav_list = []
-        c_def = self.get_user_context(title=product,
-                                      images=images,
-                                      first_image=images[0],
-                                      fav_list=fav_list,
-                                      seller=seller)
-        return dict(list(context.items()) + list(c_def.items()))
+        user_context = dict(title=product,
+                            images=images,
+                            first_image=images[0],
+                            fav_list=fav_list,
+                            seller=seller)
+        return {**context, **self.get_user_context(**user_context)}
 
+    # consider using roles or something
     def test_func(self, **kwargs):
-        """Tests if the product has not yet been managed
-            by the administration"""
+        """Tests if the product has not been managed
+            by the administration yet"""
         product = self.get_object()
         return not product.ontest or self.request.user.is_superuser
 
 
+# Fully refactor this class
 class ProductPurchase(UserPassesTestMixin, DataMixin, FormView):
 
     template_name = 'shop/product-purchase.html'
@@ -172,11 +180,11 @@ class ProductPurchase(UserPassesTestMixin, DataMixin, FormView):
         product = self.offer.product
         title = str(product.name) + ' purchase'
         product_image = product.productsgallery_set.first()
-        c_def = self.get_user_context(title=title,
-                                      image=product_image,
-                                      product=product,
-                                      offer=self.offer)
-        return dict(list(context.items()) + list(c_def.items()))
+        view_context = dict(title=title,
+                            image=product_image,
+                            product=product,
+                            offer=self.offer)
+        return {**context, **view_context}
 
     def form_invalid(self, form: BaseModelForm) -> HttpResponse:
         return super().form_invalid(form)
@@ -205,7 +213,7 @@ class ProductPurchase(UserPassesTestMixin, DataMixin, FormView):
                 owner.balance = owner.balance + total_price
             owner.save()
             visitor.save()
-            offer.product.save()
+            offer.save()
 
             product = offer.product
             new_offer, created = (ProductOffers
@@ -297,8 +305,8 @@ class ProductCheckout(UserPassesTestMixin, DataMixin, FormView):
                           .last())
             ship = ShippingAdress.objects.filter(order=last_order).last()
         title = f'Check Out Offer-{offer.id}'
-        c_def = self.get_user_context(title=title, ship=ship, offer=offer)
-        return dict(list(context.items()) + list(c_def.items()))
+        view_context = dict(title=title, ship=ship, offer=offer)
+        return {**context, **view_context}
 
     def test_func(self):
         offer = ProductOffers.objects.get(id=self.kwargs['id'])

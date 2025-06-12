@@ -50,7 +50,7 @@
                                                 <li>{{offer.product}}</li>
                                                 <li>Quantity in possesion: <span class="product-spaninfo">{{offer.availability}}</span></li>
                                                 <li>Creator: <span class="product-spaninfo" >{{offer.product.seller}}</span></li>
-                                                <li>Price: <span class="product-spaninfo" > <img class="coin-image" src="/media/images/coinsymbol.png" alt=""> {{offer.product.price}}</span> </li>
+                                                <li>Price: <span class="product-spaninfo" > <img class="coin-image" src="{% static 'main/img/coin1.png' %}" alt=""> {{offer.product.price}}</span> </li>
                                             </ul>
                                         </div>
                                         <a class="maintain_url" href="{{offer.get_edit_url}}"><i class="fa-solid fa-gavel"></i></a>

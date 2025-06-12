@@ -18,7 +18,7 @@ class User(AbstractUser):
     image = models.ImageField(upload_to="images/users-images",
                               default='default_logo_image.jpg')
     description = models.TextField(blank=True)
-    balance = models.BigIntegerField(default=0)
+    balance = models.FloatField(default=0)
 
     def get_gender(self):
         return dict(User.GENDER_CHOICES)[self.gender_choice]

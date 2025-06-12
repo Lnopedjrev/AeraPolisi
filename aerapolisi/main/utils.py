@@ -8,7 +8,6 @@ class DataMixin:
         return context
 
 
-
 def paginate(request, qers, limit=3):
     paginated_qers = Paginator(qers, limit)
     page_num = request.GET.get('page')

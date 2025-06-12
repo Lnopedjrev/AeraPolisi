@@ -2,8 +2,9 @@ import os
 import django
 from pathlib import Path
 from dotenv import load_dotenv
+import sys
 
-load_dotenv()
+load_dotenv(dotenv_path=os.getenv('ENV_PATH', '.env'))
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -12,28 +13,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', "test-secret-key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG_STATUS')
+DEBUG = (os.getenv('DEBUG_STATUS', 'False') == 'True')
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1', '0.0.0.0', 'localhost', 'aerapolisi.com', 'www.aerapolisi.com']
 
 # Application definition
 
-SITE_ID = 2
+SITE_ID = 3
 
-# ACCOUNT_ADAPTER = 'logapp.adapters.MyAccountAdapter'
 SOCIALACCOUNT_ADAPTER = 'logapp.adapters.MySocialAccountAdapter'
 
+ASGI_APPLICATION = 'aerapolisi.asgi.application'
+
 INSTALLED_APPS = [
+    'daphne',
     'channels',
-    'main',
-    'logapp',
-    'shop',
-    'management',
-    'chat_rooms',
-    'transactions',
     'captcha',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -42,13 +39,21 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'sass_processor',
-    "debug_toolbar",
     'django.contrib.sites',
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    "allauth.socialaccount.providers.google"
+    "allauth.socialaccount.providers.google",
+
+    'main',
+    'logapp',
+    'shop',
+    'management',
+    'chat_rooms',
+    'transactions',
 ]
+
+
 
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
@@ -67,13 +72,11 @@ STATICFILES_FINDERS = [
 ]
 
 
-ASGI_APPLICATION = 'aerapolisi.asgi.application'
-
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('localhost', 6379)],
+            'hosts': [(os.getenv('REDIS_HOST'), os.getenv('REDIS_PORT'))],
         }
     }
 }
@@ -87,9 +90,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "allauth.account.middleware.AccountMiddleware"
 ]
+
+ENABLE_DEBUG_TOOLBAR = DEBUG and "test" not in sys.argv
+if ENABLE_DEBUG_TOOLBAR:
+    INSTALLED_APPS += [
+        "debug_toolbar",
+    ]
+    MIDDLEWARE += [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+    ]
 
 ROOT_URLCONF = 'aerapolisi.urls'
 
@@ -111,7 +122,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'aerapolisi.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -121,8 +131,8 @@ DATABASES = {
         'NAME': os.getenv('DATABASE_NAME'),
         'USER': os.getenv('DATABASE_USER'),
         'PASSWORD': os.getenv('DATABASE_PASSWORD'),
-        'HOST': '127.0.0.1',
-        'PORT': '5432'
+        'HOST': os.getenv('DATABASE_HOST'),
+        'PORT': os.getenv('DATABASE_PORT')
     }
 }
 AUTH_USER_MODEL = 'logapp.User'
@@ -170,11 +180,11 @@ SASS_PROCESSOR_ROOT = STATIC_ROOT
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")   
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 EMAIL_PORT = 587
 EMAIL_USE_SSL = False
 EMAUL_USE_TSL = True
@@ -201,14 +211,14 @@ STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
 STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
 
-INTERNAL_IPS = [
-    "127.0.0.1",
-]
-
-AUTHENTICATION_BACKENDS  = (
+AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend"
 )
 
 LOGIN_REDIRECT_URL = "/shop/"
 LOGOUT_REDIRECT_URL = "/main"
+
+
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG

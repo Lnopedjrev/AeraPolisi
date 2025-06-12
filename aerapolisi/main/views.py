@@ -1,19 +1,20 @@
+import json
+
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import FormView
-from django.core.mail import EmailMessage
-from .utils import DataMixin
 from django.conf import settings
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
-import json
 
+from .utils import DataMixin
 from .forms import ContactForm
-from shop.models import Products, OrderInfo
-from .services import regulate_favourite, regulate_new_product
+from shop.models import Products, OrderInfo, Favourite, FavouriteItem, ProductOffers
+from .services import send_smtp_email_message
 
 
-class MainPageView(DataMixin, FormView):
+class MainPageView(FormView):
     template_name = "main/main_page.html"
     form_class = ContactForm
     success_url = reverse_lazy('main')
@@ -23,19 +24,11 @@ class MainPageView(DataMixin, FormView):
         user = 'Guest'
         if self.request.user.is_authenticated:
             user = self.request.user
-        name = form.cleaned_data['name']
-        email_sen = form.cleaned_data['email']
-        email_rec = settings.EMAIL_HOST_USER
-        message = 'From' + str(user) + form.cleaned_data['message']
+        form_data = form.cleaned_data
+        name = form_data['name']
+        email_sen = form_data['email']
 
-        EmailMessage(
-            subject="Contact Form Submission from {}".format(name),
-            body=message,
-            from_email=email_sen,
-            to=[email_rec,],
-            headers=[],
-            reply_to=[email_sen]
-        ).send()
+        send_smtp_email_message(user, name, email_sen, form_data['message'])
 
         return HttpResponseRedirect(self.get_success_url())
 
@@ -45,6 +38,7 @@ class MainPageView(DataMixin, FormView):
         return context
 
 
+@login_required
 def updateItem(request):
     data = json.loads(request.body)
     productID = data['productId']
@@ -53,21 +47,22 @@ def updateItem(request):
 
     if action in ("remove", "add"):
         customer = request.user.customer
-        regulate_favourite(product, action, customer)
+        favourite, created = Favourite.objects.get_or_create(customer=customer)
+        favouriteItem, created = FavouriteItem.objects.get_or_create(favourite=favourite, product=product)
+        if action == 'remove':
+            favouriteItem.delete()
     elif action in ("approve", "decline"):
-        regulate_new_product(product, action)
+
+        if action == "decline":
+            product.delete()
+        else:
+            product.ontest = False
+            product.save()
+            ProductOffers.objects.create(
+                product=product,
+                price=product.price,
+                availability=product.quantity,
+                owner=product.seller.customer
+            )
 
     return JsonResponse('Item was changed', safe=False)
-
-
-def updateOrder(request):
-    data = json.loads(request.body)
-    orderID = data['orderID']
-    action = data['action']
-
-    if action == 'complete':
-        order = OrderInfo.objects.get(id=orderID)
-        order.comlete = True
-        order.save()
-
-    return JsonResponse('Order was completed', safe=False)

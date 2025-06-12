@@ -113,6 +113,8 @@ i{
     padding: 0 10px;
     margin:0 auto;
     margin-bottom: 10px;
+    min-height: 100vh;
+
 }
 
 .main{
@@ -131,6 +133,15 @@ i{
     display: flex;
     color: #FFF8E1;
 }
+
+.footer__link{
+    transition: all .9s ease-out;
+}
+
+.footer__link:hover{
+    color: lighten($color_on_p, 40%);
+}
+
 .footer__lists{
     display: flex;
     margin: 0  auto;
@@ -145,12 +156,16 @@ i{
     li{
         margin-left: 10px;
     }
+    h2{
+        text-align: center;
+        margin-right: .5vw;
+    }
 }
 
 .footer__list{
     list-style-type: disc;
-    margin-left: 20px;
 }
+
 
 .logo{
     display: inline-flex;
@@ -267,7 +282,7 @@ i{
     color: $color_s;
     text-shadow: 1px 1px 1px $color_p;
     margin-top: 20px;
-    font-size: calc(var(--index) *2);
+    font-size: calc(var(--index) *1);
     font-family: $desc_font;
     transition:1s ease-out;
     transition-property: color,text-shadow;
@@ -388,13 +403,11 @@ i{
     height: 17%;
     left: 70.65%;
     transform: translateX(200%);
-    // margin-left: 60%;
     top: 29%;
     z-index: 100;
     background-color: $surface_color;
     border: 1.2px solid;
     border-radius: 12px;
-    // display: flex;
     align-items: center;
     padding: 7px;
     box-shadow: rgba(0, 0, 0, 0.2) 0px 60px 40px -7px;
@@ -405,6 +418,7 @@ i{
 }
 
 .notification__right{
+    padding-top: 1vh;
     font-size: calc(var(--index) *0.7);
     font-family: $extra_font;
     margin-bottom: 0.5vh;
@@ -503,6 +517,8 @@ i{
 
 .pagination{
     position: sticky;
+    z-index: 10000;
+    pointer-events: all;
     bottom: 0;
     display: flex;
     justify-content: center;
@@ -514,24 +530,20 @@ i{
     }
 } 
 
-.pagination__link-page{
+.pagination__link-page, .pagination__link{
     padding: 0.5vw;
     border: 2px solid black;
     border-radius: 3px;
     box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
     background-color: $surface_color;
+    
+    a{
+        cursor: pointer;
+    }
 }
 
 .current-page{
     background-color: lighten($surface_color, 20%);
-}
-
-.pagination__link{
-    padding: 0.4vw;
-    border: 2px solid black;
-    border-radius: 8px; 
-    box-shadow: rgba(0, 0, 0, 0.35) 0px -50px 36px -28px inset;
-    background-color: $surface_color;
 }
 
 .pagination__link:hover{
@@ -605,4 +617,8 @@ i{
         }
         font-size: calc(var(--index) *0.85);
     }
+}
+
+.bottom-container{
+    min-width: 500px;
 }

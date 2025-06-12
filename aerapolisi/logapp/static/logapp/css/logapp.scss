@@ -96,6 +96,7 @@ $color_on_s: #080707;// for text on secondary
     display: flex;
     justify-content: center;
     padding: 10px;
+    width: 100%;
 
 
     div{
@@ -116,7 +117,8 @@ $color_on_s: #080707;// for text on secondary
         align-items: center;
         flex-direction: column;
         padding: 30px;
-        min-height: 80vh;
+        height: inherit;
+        width: inherit;
         border: 2px solid $surface_color;
         background-color: darken($surface_color, 4%);
         box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
