@@ -44,7 +44,7 @@ jobs:
       - name: run Django tests
         run: |
           cd aerapolisi
-          python aerapolisi/manage.py test
+          python manage.py test
       - name: run linter tests
         run: black --check
         
