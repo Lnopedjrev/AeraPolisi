@@ -1,0 +1,35 @@
+FROM python:3.11.10-slim as builder
+
+WORKDIR /app
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc \
+    build-essential \
+   &&  rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip wheel --no-cache-dir --wheel-dir /app/wheels -r requirements.txt
+
+
+FROM python:3.11.10-slim as runtime
+
+WORKDIR /app
+
+COPY --from=builder /app/wheels /wheels
+COPY --from=builder /app/requirements.txt .
+
+COPY aerapolisi/ aerapolisi/
+
+RUN pip install --no-deps /wheels/* \
+    && rm -rf /wheels
+
+WORKDIR /app/aerapolisi
+
+COPY app-docker-init.sh /app/aerapolisi/
+RUN chmod +x /app/aerapolisi/app-docker-init.sh
+
+ENTRYPOINT ["/app/aerapolisi/app-docker-init.sh"]
