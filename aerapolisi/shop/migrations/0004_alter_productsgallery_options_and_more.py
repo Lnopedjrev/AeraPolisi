@@ -6,22 +6,26 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('shop', '0003_remove_shippingadress_payee_and_more'),
+        ("shop", "0003_remove_shippingadress_payee_and_more"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='productsgallery',
-            options={'ordering': ['created'], 'verbose_name': 'Product', 'verbose_name_plural': 'ProductsGallery'},
+            name="productsgallery",
+            options={
+                "ordering": ["created"],
+                "verbose_name": "Product",
+                "verbose_name_plural": "ProductsGallery",
+            },
         ),
         migrations.AlterField(
-            model_name='products',
-            name='description',
+            model_name="products",
+            name="description",
             field=models.TextField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='products',
-            name='price',
+            model_name="products",
+            name="price",
             field=models.FloatField(default=100),
         ),
     ]

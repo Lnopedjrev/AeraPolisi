@@ -7,13 +7,17 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('shop', '0019_productoffers_is_active_alter_productoffers_price'),
+        ("shop", "0019_productoffers_is_active_alter_productoffers_price"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='productoffers',
-            name='product',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.CASCADE, to='shop.products'),
+            model_name="productoffers",
+            name="product",
+            field=models.ForeignKey(
+                default=None,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="shop.products",
+            ),
         ),
     ]

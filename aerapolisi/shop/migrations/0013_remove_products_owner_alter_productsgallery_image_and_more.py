@@ -7,41 +7,67 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('shop', '0012_products_ontest'),
+        ("shop", "0012_products_ontest"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='products',
-            name='owner',
+            model_name="products",
+            name="owner",
         ),
         migrations.AlterField(
-            model_name='productsgallery',
-            name='image',
-            field=models.ImageField(upload_to='products-images'),
+            model_name="productsgallery",
+            name="image",
+            field=models.ImageField(upload_to="products-images"),
         ),
         migrations.RemoveField(
-            model_name='productsgallery',
-            name='product',
+            model_name="productsgallery",
+            name="product",
         ),
         migrations.CreateModel(
-            name='ProductOffers',
+            name="ProductOffers",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('price', models.FloatField(blank=True, default=100)),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('updated', models.DateTimeField(auto_now=True)),
-                ('owner', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='shop.customer')),
-                ('product', models.ForeignKey(default=None, on_delete=django.db.models.deletion.SET_DEFAULT, to='shop.products')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("price", models.FloatField(blank=True, default=100)),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                ("updated", models.DateTimeField(auto_now=True)),
+                (
+                    "owner",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="shop.customer",
+                    ),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        default=None,
+                        on_delete=django.db.models.deletion.SET_DEFAULT,
+                        to="shop.products",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'ProductOffer',
-                'verbose_name_plural': 'ProductOffers',
+                "verbose_name": "ProductOffer",
+                "verbose_name_plural": "ProductOffers",
             },
         ),
         migrations.AddField(
-            model_name='productsgallery',
-            name='product',
-            field=models.ForeignKey(default=None, on_delete=django.db.models.deletion.SET_DEFAULT, to='shop.products'),
+            model_name="productsgallery",
+            name="product",
+            field=models.ForeignKey(
+                default=None,
+                on_delete=django.db.models.deletion.SET_DEFAULT,
+                to="shop.products",
+            ),
         ),
     ]

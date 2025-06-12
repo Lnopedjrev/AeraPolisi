@@ -6,32 +6,32 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('shop', '0002_customer_favourite_orderinfo_products_price_and_more'),
+        ("shop", "0002_customer_favourite_orderinfo_products_price_and_more"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='shippingadress',
-            name='payee',
+            model_name="shippingadress",
+            name="payee",
         ),
         migrations.AlterField(
-            model_name='shippingadress',
-            name='adress',
+            model_name="shippingadress",
+            name="adress",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
         migrations.AlterField(
-            model_name='shippingadress',
-            name='city',
+            model_name="shippingadress",
+            name="city",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
         migrations.AlterField(
-            model_name='shippingadress',
-            name='state',
+            model_name="shippingadress",
+            name="state",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
         migrations.AlterField(
-            model_name='shippingadress',
-            name='zipcode',
+            model_name="shippingadress",
+            name="zipcode",
             field=models.CharField(blank=True, max_length=200, null=True),
         ),
     ]

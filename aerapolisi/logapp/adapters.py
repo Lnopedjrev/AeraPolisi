@@ -9,11 +9,9 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
             request, sociallogin, form
         )
         user = main_act
-        customer_name = str(user.username) + '_customer'
-        customer, created = (Customer
-                             .objects
-                             .get_or_create(user=user,
-                                            name=customer_name,
-                                            email=user.email))
+        customer_name = str(user.username) + "_customer"
+        customer, created = Customer.objects.get_or_create(
+            user=user, name=customer_name, email=user.email
+        )
         Favourite.objects.create(customer=customer)
         return user

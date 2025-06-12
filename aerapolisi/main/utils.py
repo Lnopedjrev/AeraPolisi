@@ -10,13 +10,13 @@ class DataMixin:
 
 def paginate(request, qers, limit=3):
     paginated_qers = Paginator(qers, limit)
-    page_num = request.GET.get('page')
+    page_num = request.GET.get("page")
     return paginated_qers.get_page(page_num)
 
 
 def is_htmx(request, boost_check=True):
-    hx_boost = request.headers.get('Hx-Boosted')
-    hx_request = request.headers.get('Hx-Request')
+    hx_boost = request.headers.get("Hx-Boosted")
+    hx_request = request.headers.get("Hx-Request")
 
     if boost_check and hx_boost:
         return False

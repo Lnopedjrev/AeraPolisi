@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('shop', '0018_productoffers_availability'),
+        ("shop", "0018_productoffers_availability"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='productoffers',
-            name='is_active',
+            model_name="productoffers",
+            name="is_active",
             field=models.BooleanField(default=True),
         ),
         migrations.AlterField(
-            model_name='productoffers',
-            name='price',
+            model_name="productoffers",
+            name="price",
             field=models.FloatField(blank=True, default=100, null=True),
         ),
     ]

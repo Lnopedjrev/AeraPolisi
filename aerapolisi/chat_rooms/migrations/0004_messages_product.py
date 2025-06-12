@@ -7,14 +7,20 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('shop', '0012_products_ontest'),
-        ('chat_rooms', '0003_remove_chats_participants'),
+        ("shop", "0012_products_ontest"),
+        ("chat_rooms", "0003_remove_chats_participants"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='messages',
-            name='product',
-            field=models.ForeignKey(blank=True, default='', null=True, on_delete=django.db.models.deletion.SET_DEFAULT, to='shop.products'),
+            model_name="messages",
+            name="product",
+            field=models.ForeignKey(
+                blank=True,
+                default="",
+                null=True,
+                on_delete=django.db.models.deletion.SET_DEFAULT,
+                to="shop.products",
+            ),
         ),
     ]

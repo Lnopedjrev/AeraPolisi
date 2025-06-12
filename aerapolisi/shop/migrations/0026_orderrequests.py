@@ -7,22 +7,38 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('shop', '0025_alter_productoffers_options_alter_products_options_and_more'),
+        ("shop", "0025_alter_productoffers_options_alter_products_options_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='OrderRequests',
+            name="OrderRequests",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('number', models.IntegerField(default=0)),
-                ('date_requested', models.DateTimeField(auto_now_add=True)),
-                ('last_order', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='shop.orderinfo')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("number", models.IntegerField(default=0)),
+                ("date_requested", models.DateTimeField(auto_now_add=True)),
+                (
+                    "last_order",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="shop.orderinfo",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'OrderRequest',
-                'verbose_name_plural': 'Requests',
-                'ordering': ['date_requested'],
+                "verbose_name": "OrderRequest",
+                "verbose_name_plural": "Requests",
+                "ordering": ["date_requested"],
             },
         ),
     ]

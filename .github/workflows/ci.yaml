@@ -46,7 +46,7 @@ jobs:
           cd aerapolisi
           python manage.py test
       - name: run linter tests
-        run: black --check
+        run: black --check .
         
         
       

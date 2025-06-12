@@ -7,13 +7,18 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('shop', '0026_orderrequests'),
+        ("shop", "0026_orderrequests"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='orderrequests',
-            name='shipping',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='shop.shippingadress'),
+            model_name="orderrequests",
+            name="shipping",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="shop.shippingadress",
+            ),
         ),
     ]

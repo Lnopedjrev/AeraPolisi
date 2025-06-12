@@ -9,21 +9,17 @@ class ProductsModelTestCase(TestCase):
 
     @classmethod
     def setUpTestData(cls):
-        cls.TEST_USER = User.objects.create(
-            username="testuser",
-            email=""
-        )
+        cls.TEST_USER = User.objects.create(username="testuser", email="")
         cls.TEST_CUSTOMER = Customer.objects.create(
-            user=cls.TEST_USER,
-            name="Test User",
-            email="")
+            user=cls.TEST_USER, name="Test User", email=""
+        )
         cls.TEST_PRODUCT = Products.objects.create(
             name="Test Product",
             description="This is a test product.",
             quantity=10,
             price=99.99,
             seller=cls.TEST_USER,
-            service=False
+            service=False,
         )
 
     def test_product_correctly_identified(self):

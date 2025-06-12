@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('logapp', '0011_alter_user_image'),
+        ("logapp", "0011_alter_user_image"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='user',
-            name='date_birth',
+            model_name="user",
+            name="date_birth",
             field=models.DateField(null=True),
         ),
     ]

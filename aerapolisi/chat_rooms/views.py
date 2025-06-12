@@ -19,13 +19,13 @@ class ChatRoom(UserPassesTestMixin, LoginRequiredMixin, DetailView):
     def get_template_names(self):
         """Check if the loading page hast htmx"""
         if is_htmx(self.request):
-            return 'chat_rooms/seller-products.html'
+            return "chat_rooms/seller-products.html"
         else:
-            return 'chat_rooms/chat-template.html'
+            return "chat_rooms/chat-template.html"
 
     def get_object(self, queryset=None, **kwargs):
         """Returns the user instance of the interlocutor(seller)
-            and creates or get chat group"""
+        and creates or get chat group"""
         user_req = self.request.user
         user_pag = self.user_pag
         self.group_name = self.get_or_create_chat(user_req, user_pag)
@@ -40,12 +40,9 @@ class ChatRoom(UserPassesTestMixin, LoginRequiredMixin, DetailView):
         with transaction.atomic():
             group, created = Group.objects.get_or_create(name=group_name)
             group.user_set.add(user_req, user_pag)
-            chat, created = (Chats
-                             .objects
-                             .get_or_create(
-                                group=group,
-                                name=str(group_name) + "_chat"
-                             ))
+            chat, created = Chats.objects.get_or_create(
+                group=group, name=str(group_name) + "_chat"
+            )
         return group_name
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -53,11 +50,10 @@ class ChatRoom(UserPassesTestMixin, LoginRequiredMixin, DetailView):
         default_context = super().get_context_data(**kwargs)
         seller = self.user_pag
 
-        page = self.request.GET.get('page')
-        products = (Products
-                    .objects
-                    .filter(seller=seller, ontest=False)
-                    .prefetch_related("productsgallery_set"))
+        page = self.request.GET.get("page")
+        products = Products.objects.filter(
+            seller=seller, ontest=False
+        ).prefetch_related("productsgallery_set")
         paginator = Paginator(products, 5)
 
         try:
@@ -68,18 +64,18 @@ class ChatRoom(UserPassesTestMixin, LoginRequiredMixin, DetailView):
             products = paginator.page(paginator.num_pages)
 
         title = seller.username.upper() + "_chat"
-        view_context = dict(title=title,
-                            group=self.group_name,
-                            products=products,
-                            type='chat',
-                            aginate_except=True)
+        view_context = dict(
+            title=title,
+            group=self.group_name,
+            products=products,
+            type="chat",
+            aginate_except=True,
+        )
         return {**default_context, **view_context}
 
     def test_func(self) -> bool | None:
         """Verifies that the requesting user and interlocutor
-            aren't the same person"""
-        self.user_pag = (User
-                         .objects
-                         .get(username=self.kwargs['seller_name']))
+        aren't the same person"""
+        self.user_pag = User.objects.get(username=self.kwargs["seller_name"])
 
         return not self.user_pag == self.request.user

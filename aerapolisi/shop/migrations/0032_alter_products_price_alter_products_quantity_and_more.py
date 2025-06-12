@@ -7,23 +7,47 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('shop', '0031_alter_favouriteitem_favourite'),
+        ("shop", "0031_alter_favouriteitem_favourite"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='products',
-            name='price',
-            field=models.FloatField(blank=True, default=100, validators=[django.core.validators.MinValueValidator(0.01, 'Price must be greater than 0.01')]),
+            model_name="products",
+            name="price",
+            field=models.FloatField(
+                blank=True,
+                default=100,
+                validators=[
+                    django.core.validators.MinValueValidator(
+                        0.01, "Price must be greater than 0.01"
+                    )
+                ],
+            ),
         ),
         migrations.AlterField(
-            model_name='products',
-            name='quantity',
-            field=models.IntegerField(default=0, validators=[django.core.validators.MinValueValidator(1, 'Quantity must be greater than 0')]),
+            model_name="products",
+            name="quantity",
+            field=models.IntegerField(
+                default=0,
+                validators=[
+                    django.core.validators.MinValueValidator(
+                        1, "Quantity must be greater than 0"
+                    )
+                ],
+            ),
         ),
         migrations.AlterField(
-            model_name='productsgallery',
-            name='image',
-            field=models.ImageField(blank=True, null=True, upload_to='products-images', validators=[django.core.validators.FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'webp'])]),
+            model_name="productsgallery",
+            name="image",
+            field=models.ImageField(
+                blank=True,
+                null=True,
+                upload_to="products-images",
+                validators=[
+                    django.core.validators.FileExtensionValidator(
+                        allowed_extensions=["jpg", "jpeg", "png", "webp"]
+                    )
+                ],
+            ),
         ),
     ]

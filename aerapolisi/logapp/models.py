@@ -8,15 +8,15 @@ from dateutil.relativedelta import relativedelta
 
 class User(AbstractUser):
     """The modified user model"""
-    GENDER_CHOICES = [
-                    ("0", 'FEMALE'),
-                    ("1", 'MALE')
-    ]
-    gender_choice = models.CharField(max_length=30, choices=GENDER_CHOICES,
-                                     default=0, verbose_name="GENDER")
+
+    GENDER_CHOICES = [("0", "FEMALE"), ("1", "MALE")]
+    gender_choice = models.CharField(
+        max_length=30, choices=GENDER_CHOICES, default=0, verbose_name="GENDER"
+    )
     date_birth = models.DateField(null=True)
-    image = models.ImageField(upload_to="images/users-images",
-                              default='default_logo_image.jpg')
+    image = models.ImageField(
+        upload_to="images/users-images", default="default_logo_image.jpg"
+    )
     description = models.TextField(blank=True)
     balance = models.FloatField(default=0)
 

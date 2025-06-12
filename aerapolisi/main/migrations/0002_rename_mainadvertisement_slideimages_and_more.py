@@ -6,16 +6,16 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('main', '0001_initial'),
+        ("main", "0001_initial"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='MainAdvertisement',
-            new_name='SlideImages',
+            old_name="MainAdvertisement",
+            new_name="SlideImages",
         ),
         migrations.AlterModelOptions(
-            name='slideimages',
-            options={'ordering': ['-time_create', 'title']},
+            name="slideimages",
+            options={"ordering": ["-time_create", "title"]},
         ),
     ]

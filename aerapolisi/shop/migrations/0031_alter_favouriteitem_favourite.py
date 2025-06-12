@@ -7,13 +7,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('shop', '0030_alter_favourite_customer'),
+        ("shop", "0030_alter_favourite_customer"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='favouriteitem',
-            name='favourite',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='shop.favourite'),
+            model_name="favouriteitem",
+            name="favourite",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="shop.favourite",
+            ),
         ),
     ]

@@ -17,39 +17,41 @@ from .services import send_smtp_email_message
 class MainPageView(FormView):
     template_name = "main/main_page.html"
     form_class = ContactForm
-    success_url = reverse_lazy('main')
+    success_url = reverse_lazy("main")
 
     def form_valid(self, form, **kwargs):
         """Prepare the data from form for sending an email"""
-        user = 'Guest'
+        user = "Guest"
         if self.request.user.is_authenticated:
             user = self.request.user
         form_data = form.cleaned_data
-        name = form_data['name']
-        email_sen = form_data['email']
+        name = form_data["name"]
+        email_sen = form_data["email"]
 
-        send_smtp_email_message(user, name, email_sen, form_data['message'])
+        send_smtp_email_message(user, name, email_sen, form_data["message"])
 
         return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = "Main Page"
+        context["title"] = "Main Page"
         return context
 
 
 @login_required
 def updateItem(request):
     data = json.loads(request.body)
-    productID = data['productId']
-    action = data['action']
+    productID = data["productId"]
+    action = data["action"]
     product = Products.objects.get(id=productID)
 
     if action in ("remove", "add"):
         customer = request.user.customer
         favourite, created = Favourite.objects.get_or_create(customer=customer)
-        favouriteItem, created = FavouriteItem.objects.get_or_create(favourite=favourite, product=product)
-        if action == 'remove':
+        favouriteItem, created = FavouriteItem.objects.get_or_create(
+            favourite=favourite, product=product
+        )
+        if action == "remove":
             favouriteItem.delete()
     elif action in ("approve", "decline"):
 
@@ -62,7 +64,7 @@ def updateItem(request):
                 product=product,
                 price=product.price,
                 availability=product.quantity,
-                owner=product.seller.customer
+                owner=product.seller.customer,
             )
 
-    return JsonResponse('Item was changed', safe=False)
+    return JsonResponse("Item was changed", safe=False)

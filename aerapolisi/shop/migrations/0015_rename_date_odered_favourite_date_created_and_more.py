@@ -6,23 +6,23 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('shop', '0014_alter_favouriteitem_product'),
+        ("shop", "0014_alter_favouriteitem_product"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='favourite',
-            old_name='date_odered',
-            new_name='date_created',
+            model_name="favourite",
+            old_name="date_odered",
+            new_name="date_created",
         ),
         migrations.RenameField(
-            model_name='favouriteitem',
-            old_name='order',
-            new_name='favourite',
+            model_name="favouriteitem",
+            old_name="order",
+            new_name="favourite",
         ),
         migrations.RenameField(
-            model_name='favouriteitem',
-            old_name='product',
-            new_name='offer',
+            model_name="favouriteitem",
+            old_name="product",
+            new_name="offer",
         ),
     ]

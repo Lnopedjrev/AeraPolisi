@@ -11,16 +11,19 @@ from shop.models import Customer, Favourite
 import json
 
 from logapp.models import User
-from shop.models import (ProductOffers, Products,
-                         OrderRequests, OrderInfo)
-from .forms import (LoginUserForm, RegisterUserForm,
-                    EditUserForm, EditProductForm,
-                    EditOfferForm)
+from shop.models import ProductOffers, Products, OrderRequests, OrderInfo
+from .forms import (
+    LoginUserForm,
+    RegisterUserForm,
+    EditUserForm,
+    EditProductForm,
+    EditOfferForm,
+)
 
 
 class LoginUser(UserPassesTestMixin, LoginView):
     form_class = LoginUserForm
-    template_name = 'logapp/log_page.html'
+    template_name = "logapp/log_page.html"
     login_url = reverse_lazy("main")
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -52,15 +55,13 @@ class RegisterUser(UserPassesTestMixin, CreateView):
     def form_valid(self, form):
         """Creating new customer and attaching favourite"""
         user = form.save()
-        customer_name = user.username + '_customer'
-        customer, created = (Customer
-                             .objects
-                             .get_or_create(user=user,
-                                            name=customer_name,
-                                            email=user.email))
+        customer_name = user.username + "_customer"
+        customer, created = Customer.objects.get_or_create(
+            user=user, name=customer_name, email=user.email
+        )
         Favourite.objects.create(customer=customer)
 
-        backend = 'django.contrib.auth.backends.ModelBackend'
+        backend = "django.contrib.auth.backends.ModelBackend"
         login(self.request, user, backend=backend)
         return redirect("main")
 
@@ -77,29 +78,28 @@ class UserShow(DetailView):
     model = User
     template_name = "logapp/profile_page.html"
     context_object_name = "page_user"
-    slug_url_kwarg = 'username'
-    slug_field = 'username'
+    slug_url_kwarg = "username"
+    slug_field = "username"
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         extra_style = ""
         visitor = self.request.user
-        user = context['page_user']
+        user = context["page_user"]
         if user != visitor:
-            extra_style = 'hidden'
+            extra_style = "hidden"
 
-        productoffers = (ProductOffers
-                         .objects
-                         .filter(Q(owner=self.customer)
-                                 | Q(product__seller=self))
-                         .filter(availability__gt=0)
-                         .select_related('product', 'product__seller')
-                         .prefetch_related('product__productsgallery_set'))
+        productoffers = (
+            ProductOffers.objects.filter(
+                Q(owner=self.customer) | Q(product__seller=self)
+            )
+            .filter(availability__gt=0)
+            .select_related("product", "product__seller")
+            .prefetch_related("product__productsgallery_set")
+        )
 
         own_products = list(set([a.product for a in productoffers]))
-        view_context = dict(title=user,
-                            extra_style=extra_style,
-                            products=own_products)
+        view_context = dict(title=user, extra_style=extra_style, products=own_products)
         return {**context, **view_context}
 
 
@@ -108,46 +108,44 @@ class EditUser(UserPassesTestMixin, UpdateView):
     form_class = EditUserForm
     template_name = "logapp/profile_edit_page.html"
     context_object_name = "page_user"
-    slug_url_kwarg = 'username'
-    slug_field = 'username'
-    redirect_field_name = 'main'
+    slug_url_kwarg = "username"
+    slug_field = "username"
+    redirect_field_name = "main"
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = "Change profile"
+        context["title"] = "Change profile"
         return context
 
     def test_func(self):
-        '''Tests if the request user is the user, whose page is changed'''
-        page_user = User.objects.get(username=self.kwargs['username'])
+        """Tests if the request user is the user, whose page is changed"""
+        page_user = User.objects.get(username=self.kwargs["username"])
         return page_user == page_user
 
 
 class ProductsMaintain(LoginRequiredMixin, ListView):
     model = ProductOffers
-    template_name = 'logapp/user_warehouse.html'
+    template_name = "logapp/user_warehouse.html"
 
     def get_queryset(self):
         user = self.request.user
-        productoffer_list = (ProductOffers
-                             .objects
-                             .filter(Q(owner=user.customer)
-                                     | Q(product__seller=user))
-                             .filter(availability__gt=0)
-                             .select_related('product', 'product__seller')
-                             .prefetch_related('product__productsgallery_set'))
+        productoffer_list = (
+            ProductOffers.objects.filter(
+                Q(owner=user.customer) | Q(product__seller=user)
+            )
+            .filter(availability__gt=0)
+            .select_related("product", "product__seller")
+            .prefetch_related("product__productsgallery_set")
+        )
         return productoffer_list
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
-        ln_rl = (OrderRequests
-                 .objects
-                 .filter(
-                      last_order__offer__product__seller=user,
-                      last_order__complete=False)
-                 .count())
-        title = str(user).capitalize() + ' maintains products'
+        ln_rl = OrderRequests.objects.filter(
+            last_order__offer__product__seller=user, last_order__complete=False
+        ).count()
+        title = str(user).capitalize() + " maintains products"
         view_context = dict(title=title, ln_req_l=ln_rl)
         return {**context, **view_context}
 
@@ -157,8 +155,8 @@ class EditProduct(UserPassesTestMixin, UpdateView):
     form_class = EditProductForm
     template_name = "logapp/edit_product.html"
     context_object_name = "edit"
-    redirect_field_name = 'main'
-    pk_url_kwarg = 'id'
+    redirect_field_name = "main"
+    pk_url_kwarg = "id"
 
     def get_object(self, queryset=None):
         product = self.product
@@ -166,7 +164,7 @@ class EditProduct(UserPassesTestMixin, UpdateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = "Adjust Product"
+        context["title"] = "Adjust Product"
         return context
 
     def test_func(self):
@@ -185,11 +183,11 @@ class EditOffer(UpdateView):
     form_class = EditOfferForm
     template_name = "logapp/edit_offer.html"
     context_object_name = "offer"
-    pk_url_kwarg = 'id'
+    pk_url_kwarg = "id"
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Adjust offer'
+        context["title"] = "Adjust offer"
         return context
 
     def test_func(self):
@@ -197,7 +195,7 @@ class EditOffer(UpdateView):
         return self.request.user == offer.owner.user
 
     def get_success_url(self) -> str:
-        return reverse('products-maintain')
+        return reverse("products-maintain")
 
 
 class RequestsCheck(ListView, LoginRequiredMixin):
@@ -207,27 +205,25 @@ class RequestsCheck(ListView, LoginRequiredMixin):
 
     def get_queryset(self):
         req_user = self.request.user
-        object_list = (OrderRequests
-                       .objects
-                       .filter(
-                           last_order__offer__product__seller=req_user,
-                           last_order__complete=False))
+        object_list = OrderRequests.objects.filter(
+            last_order__offer__product__seller=req_user, last_order__complete=False
+        )
         return object_list
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = f'Requests to {self.request.user}'
+        context["title"] = f"Requests to {self.request.user}"
         return context
 
 
 def updateOrder(request):
     data = json.loads(request.body)
-    orderID = data['orderId']
-    action = data['action']
+    orderID = data["orderId"]
+    action = data["action"]
 
-    if action == 'complete':
+    if action == "complete":
         order = OrderInfo.objects.get(id=orderID)
         order.complete = True
         order.save()
 
-    return JsonResponse('Order was completed', safe=False)
+    return JsonResponse("Order was completed", safe=False)

@@ -33,9 +33,9 @@ class BalanceReplenishing(CreateView, LoginRequiredMixin, DataMixin):
 
     def form_valid(self, form):
         data = form.cleaned_data
-        userP = UserPayment.objects.create(user=self.request.user,
-                                           value=data['value'],
-                                           payment_bool=False)
+        userP = UserPayment.objects.create(
+            user=self.request.user, value=data["value"], payment_bool=False
+        )
         userP.save()
 
         return redirect("payment-create", payment_id=userP.pk)
@@ -53,15 +53,15 @@ def create_checkout_session(request, payment_id):
         checkout_session = stripe.checkout.Session.create(**session_data)
         return redirect(checkout_session.url, code=303)
     except Exception as e:
-        return JsonResponse({'error': str(e)})
+        return JsonResponse({"error": str(e)})
 
 
 def payment_successful(request):
-    return render(request, 'transactions/payment_successful.html')
+    return render(request, "transactions/payment_successful.html")
 
 
 def payment_cancelled(request):
-    return render(request, 'transactions/payment_cancelled.html')
+    return render(request, "transactions/payment_cancelled.html")
 
 
 @csrf_exempt
@@ -72,16 +72,14 @@ def stripe_webhook(request):
     event = None
 
     try:
-        event = stripe.Webhook.construct_event(data,
-                                               sig_header,
-                                               endpoint_secret)
+        event = stripe.Webhook.construct_event(data, sig_header, endpoint_secret)
     except ValueError as e:
         return HttpResponse(status=400)
     except stripe.error.SignatureVerificationError as e:
         return HttpResponse(status=400)
 
-    if event['type'] == "checkout.session.completed":
-        payment_id = event['data']['object']['metadata']['payment_id']
+    if event["type"] == "checkout.session.completed":
+        payment_id = event["data"]["object"]["metadata"]["payment_id"]
         payment = get_object_or_404(UserPayment, id=payment_id)
         with transaction.atomic():
             payment.user.balance += payment.value

@@ -7,20 +7,30 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='MainAdvertisement',
+            name="MainAdvertisement",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=120)),
-                ('description', models.CharField(blank=True, max_length=4096)),
-                ('image', models.ImageField(upload_to='images/main_slide')),
-                ('time_create', models.DateTimeField(auto_now_add=True)),
-                ('time_update', models.DateTimeField(auto_now=True)),
-                ('slug', models.SlugField(max_length=255, unique=True, verbose_name='URL')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=120)),
+                ("description", models.CharField(blank=True, max_length=4096)),
+                ("image", models.ImageField(upload_to="images/main_slide")),
+                ("time_create", models.DateTimeField(auto_now_add=True)),
+                ("time_update", models.DateTimeField(auto_now=True)),
+                (
+                    "slug",
+                    models.SlugField(max_length=255, unique=True, verbose_name="URL"),
+                ),
             ],
         ),
     ]

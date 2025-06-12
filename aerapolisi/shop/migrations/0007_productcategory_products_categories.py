@@ -6,25 +6,33 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('shop', '0006_remove_productsgallery_product_and_more'),
+        ("shop", "0006_remove_productsgallery_product_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ProductCategory',
+            name="ProductCategory",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=200)),
-                ('descriptions', models.TextField(blank=True, null=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=200)),
+                ("descriptions", models.TextField(blank=True, null=True)),
             ],
             options={
-                'verbose_name': 'Category',
-                'verbose_name_plural': 'ProductsCategories',
+                "verbose_name": "Category",
+                "verbose_name_plural": "ProductsCategories",
             },
         ),
         migrations.AddField(
-            model_name='products',
-            name='categories',
-            field=models.ManyToManyField(to='shop.productcategory'),
+            model_name="products",
+            name="categories",
+            field=models.ManyToManyField(to="shop.productcategory"),
         ),
     ]

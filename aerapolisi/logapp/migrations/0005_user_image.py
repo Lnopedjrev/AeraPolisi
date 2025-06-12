@@ -6,13 +6,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('logapp', '0004_remove_user_slug'),
+        ("logapp", "0004_remove_user_slug"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='image',
-            field=models.ImageField(blank=True, default='default-logo.jpg', upload_to='users-images'),
+            model_name="user",
+            name="image",
+            field=models.ImageField(
+                blank=True, default="default-logo.jpg", upload_to="users-images"
+            ),
         ),
     ]

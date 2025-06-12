@@ -8,4 +8,4 @@ class TransactionInfoForm(forms.ModelForm):
 
     class Meta:
         model = UserPayment
-        fields = ('value', 'email')
+        fields = ("value", "email")

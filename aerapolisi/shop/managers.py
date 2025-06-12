@@ -10,6 +10,6 @@ class ProductOffersManager(models.Manager):
             product=product,
             price=product.price,
             availability=product.quantity,
-            owner=product.seller.customer
+            owner=product.seller.customer,
         )
         return offer

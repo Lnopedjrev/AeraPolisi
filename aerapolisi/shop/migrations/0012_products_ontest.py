@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('shop', '0011_rename_ownergroupmanager_ownergroup'),
+        ("shop", "0011_rename_ownergroupmanager_ownergroup"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='products',
-            name='ontest',
+            model_name="products",
+            name="ontest",
             field=models.BooleanField(default=True),
         ),
     ]

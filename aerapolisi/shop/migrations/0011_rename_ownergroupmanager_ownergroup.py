@@ -8,13 +8,13 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('auth', '0012_alter_user_first_name_max_length'),
-        ('shop', '0010_alter_shippingadress_order_ownergroupmanager'),
+        ("auth", "0012_alter_user_first_name_max_length"),
+        ("shop", "0010_alter_shippingadress_order_ownergroupmanager"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='OwnerGroupManager',
-            new_name='OwnerGroup',
+            old_name="OwnerGroupManager",
+            new_name="OwnerGroup",
         ),
     ]

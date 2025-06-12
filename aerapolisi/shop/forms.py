@@ -33,7 +33,7 @@ class ProductPurchaseForm(forms.ModelForm):
 
     class Meta:
         model = ShippingAdress
-        fields = '__all__'
+        fields = "__all__"
 
 
 try:
@@ -44,21 +44,20 @@ except Exception as e:
     CHOICES1 = []
 
 
-
 class FilterProductForm(forms.Form):
 
-    CHOICES2 = [('Service', 'Service'), ('Products', 'Products')]
+    CHOICES2 = [("Service", "Service"), ("Products", "Products")]
     categories = forms.MultipleChoiceField(choices=CHOICES1, required=False)
     name = forms.CharField(max_length=200, required=False)
-    is_service = forms.ChoiceField(widget=forms.RadioSelect,
-                                   choices=CHOICES2,
-                                   required=False)
+    is_service = forms.ChoiceField(
+        widget=forms.RadioSelect, choices=CHOICES2, required=False
+    )
     minprice = forms.FloatField()
     maxprice = forms.FloatField()
     seller_name = forms.CharField(max_length=200, required=False)
 
     class Meta:
-        fields = '__all__'
+        fields = "__all__"
 
 
 class SupposeProductForm(forms.ModelForm):
@@ -68,8 +67,16 @@ class SupposeProductForm(forms.ModelForm):
 
     class Meta:
         model = Products
-        fields = ('name', 'description', 'images', 'quantity',
-                  'price', 'service', 'categories', 'captcha')
+        fields = (
+            "name",
+            "description",
+            "images",
+            "quantity",
+            "price",
+            "service",
+            "categories",
+            "captcha",
+        )
 
 
 class ShippingChangeForm(forms.ModelForm):
@@ -77,4 +84,4 @@ class ShippingChangeForm(forms.ModelForm):
 
     class Meta:
         model = ShippingAdress
-        fields = ('address', 'city', 'state', 'zipcode', 'number')
+        fields = ("address", "city", "state", "zipcode", "number")

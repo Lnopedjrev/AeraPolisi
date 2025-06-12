@@ -7,26 +7,38 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('shop', '0024_alter_productoffers_is_active'),
+        ("shop", "0024_alter_productoffers_is_active"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='productoffers',
-            options={'ordering': ['created'], 'verbose_name': 'ProductOffer', 'verbose_name_plural': 'ProductOffers'},
+            name="productoffers",
+            options={
+                "ordering": ["created"],
+                "verbose_name": "ProductOffer",
+                "verbose_name_plural": "ProductOffers",
+            },
         ),
         migrations.AlterModelOptions(
-            name='products',
-            options={'ordering': ['created'], 'verbose_name': 'Product', 'verbose_name_plural': 'Products'},
+            name="products",
+            options={
+                "ordering": ["created"],
+                "verbose_name": "Product",
+                "verbose_name_plural": "Products",
+            },
         ),
         migrations.RenameField(
-            model_name='shippingadress',
-            old_name='adress',
-            new_name='address',
+            model_name="shippingadress",
+            old_name="adress",
+            new_name="address",
         ),
         migrations.AlterField(
-            model_name='orderinfo',
-            name='offer',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='shop.productoffers'),
+            model_name="orderinfo",
+            name="offer",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="shop.productoffers",
+            ),
         ),
     ]
