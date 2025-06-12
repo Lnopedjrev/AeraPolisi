@@ -26,7 +26,7 @@ jobs:
     env:
       DATABASE_NAME:   ${{ vars.DATABASE_NAME }}
       DATABASE_USER: ${{ vars.DATABASE_USER }}
-      POSTGRES_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+      DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
       DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
       DATABASE_HOST: 127.0.0.1
       DATABASE_PORT: 5432
